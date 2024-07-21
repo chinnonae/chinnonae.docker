@@ -24,11 +24,9 @@
   loop:
     - docker.yaml
     - prometheus.yaml
-  notify: Reload Prometheus
 
 - name: Copy prometheus config
   ansible.builtin.template:
     src: "prometheus/prometheus.yml.j2"
     dest: "{{ compose_base_prometheus_config_dir }}/prometheus.yml"
     mode: '0644'
-  notify: Reload Prometheus
