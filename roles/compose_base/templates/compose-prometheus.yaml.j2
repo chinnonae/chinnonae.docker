@@ -11,7 +11,7 @@ services:
       - --storage.tsdb.path=/prometheus
       - --web.console.libraries=/usr/share/prometheus/console_libraries
       - --web.console.templates=/usr/share/prometheus/consoles"
-      - --web.external-url="https://{{ compose_base_prometheus_host }}{{ compose_base_prometheus_web_path_prefix }}"
+      - --web.external-url=https://{{ compose_base_prometheus_host }}{{ compose_base_prometheus_web_path_prefix }}
     networks:
       - traefik
       - prometheus
