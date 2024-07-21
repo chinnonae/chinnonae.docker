@@ -1,4 +1,10 @@
 ---
+- name: Ensure compose project directory exists
+  ansible.builtin.file:
+    path: "{{ compose_base_project_dir }}"
+    state: directory
+    mode: '0644''
+
 - name: Copy docker compose configs
   ansible.builtin.template:
     src: "{{ item }}.j2"
