@@ -1,0 +1,26 @@
+---
+- name: Copy docker compose configs
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "{{ compose_base_project_dir }}/{{ item }}"
+    mode: '0644'
+  loop: "{{ compose_base_compose_files }}"
+  notify: Docker Compose Up
+
+- name: Copy main docker compose config
+  ansible.builtin.template:
+    src: "docker-compose.yml.j2"
+    dest: "{{ compose_base_project_dir }}/docker-compose.yaml"
+    mode: '0644'
+  notify: Docker Compose Up
+
+- name: Ensure prometheus configs exists
+  ansible.builtin.include_tasks: prometheus.yml
+
+- name: Ensure traefik configs exists
+  ansible.builtin.include_tasks: traefik.yml
+
+- name: Docker Compose Up
+  communtiy.docker.docker_compose_v2:
+    project_src: "{{ compose_base_project_dir }}"
+  register: docker_compose

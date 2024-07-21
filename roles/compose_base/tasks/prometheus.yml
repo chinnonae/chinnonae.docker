@@ -1,0 +1,34 @@
+- name: Make sure prometheus config directory exists
+  ansible.builtin.file:
+    path: "{{ compose_base_prometheus_config_dir }}"
+    state: directory
+    mode: '0644'
+
+- name: Make sure prometheus scrape config directory exists
+  ansible.builtin.file:
+    path: "{{ compose_base_prometheus_config_dir }}/scrapes"
+    state: directory
+    mode: '0644'
+
+- name: Make sure prometheus rule config directory exists
+  ansible.builtin.file:
+    path: "{{ compose_base_prometheus_config_dir }}/rules"
+    state: directory
+    mode: '0644'
+
+- name: Copy scrape configs
+  ansible.builtin.template:
+    src: "prometheus/scrapes/{{ item }}.j2"
+    dest: "{{ compose_base_prometheus_config_dir }}/scrapes/{{ item }}"
+    mode: '0644'
+  loop:
+    - docker.yaml
+    - prometheus.yaml
+  notify: Reload Prometheus
+
+- name: Copy prometheus config
+  ansible.builtin.template:
+    src: "prometheus/prometheus.yml.j2"
+    dest: "{{ compose_base_prometheus_config_dir }}/prometheus.yml"
+    mode: '0644'
+  notify: Reload Prometheus

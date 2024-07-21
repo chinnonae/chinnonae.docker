@@ -1,0 +1,11 @@
+- name: Make sure traefik config directory exists
+  ansible.builtin.file:
+    path: "{{ compose_base_traefik_config_dir }}"
+    state: directory
+    mode: '0644'
+
+- name: Make sure traefik config exists
+  ansible.builtin.template:
+    src: "traefik/traefik.yml.j2"
+    dest: "{{ compose_base_traefik_config_dir }}/traefik.yml"
+    mode: '0644'
