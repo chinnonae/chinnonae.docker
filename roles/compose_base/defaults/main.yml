@@ -20,5 +20,5 @@ compose_base_prometheus_web_path_prefix: "/p"
 compose_base_cadvisor_image_url: gcr.io/cadvisor/cadvisor
 compose_base_cadvisor_image_tag: v0.49.1
 
-compose_base_node_exporter_image_url: prometheus/node-exporter
+compose_base_node_exporter_image_url: quay.io/prometheus/node-exporter
 compose_base_node_exporter_image_tag: v1.8.1
