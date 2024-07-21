@@ -21,6 +21,7 @@ services:
       traefik.http.routers.prometheus.tls: "true"
       traefik.http.routers.prometheus.tls.certresolver: "http01"
       traefik.http.services.prometheus.loadbalancer.server.port: "9090"
+      traefik.http.middlewares.prometheus.basicauth.users: "{{ compose_base_prometheus_users }}"
       traefik.docker.network: "traefik"
     volumes:
       - prometheus:/prometheus
