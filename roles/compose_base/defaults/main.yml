@@ -2,8 +2,8 @@
 compose_base_project_dir: /opt/compose-base
 
 compose_base_compose_files:
-  - compose-prometheus.yaml.j2
-  - compose-traefik.yaml.j2
+  - compose-prometheus.yaml
+  - compose-traefik.yaml
 
 compose_base_traefik_config_dir: "{{ compose_base_project_dir }}/traefik"
 compose_base_traefik_image_url: traefik
