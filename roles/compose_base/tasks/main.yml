@@ -9,7 +9,7 @@
 
 - name: Copy main docker compose config
   ansible.builtin.template:
-    src: "docker-compose.yml.j2"
+    src: "docker-compose.yaml.j2"
     dest: "{{ compose_base_project_dir }}/docker-compose.yaml"
     mode: '0644'
   notify: Docker Compose Up

@@ -19,9 +19,11 @@ services:
       traefik.http.services.prometheus.loadbalancer.server.port: "9090"
       traefik.docker.network: "traefik"
     volumes:
-      - prometheus:/data
+      - prometheus:/prometheus
       - /var/run/docker.sock:/var/run/docker.sock
-      - 
+      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/scrapes:/etc/prometheus/scrapes:ro
+      - ./prometheus/rules:/etc/prometheus/rules:ro
 
   alertmanager:
 
