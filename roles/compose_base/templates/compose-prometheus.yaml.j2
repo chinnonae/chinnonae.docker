@@ -7,6 +7,10 @@ services:
       - --storage.tsdb.retention.time=30d
       - --storage.tsdb.retention.size=20GB
       - --storage.tsdb.wal-compression
+      - --config.file=/etc/prometheus/prometheus.yaml
+      - --storage.tsdb.path=/prometheus
+      - --web.console.libraries=/usr/share/prometheus/console_libraries
+      - --web.console.templates=/usr/share/prometheus/consoles"
     networks:
       - traefik
       - prometheus
@@ -21,7 +25,7 @@ services:
     volumes:
       - prometheus:/prometheus
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
       - ./prometheus/scrapes:/etc/prometheus/scrapes:ro
       - ./prometheus/rules:/etc/prometheus/rules:ro
 
