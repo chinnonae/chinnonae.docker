@@ -2,19 +2,19 @@
   ansible.builtin.file:
     path: "{{ compose_base_prometheus_config_dir }}"
     state: directory
-    mode: '0644'
+    mode: '0755'
 
 - name: Make sure prometheus scrape config directory exists
   ansible.builtin.file:
     path: "{{ compose_base_prometheus_config_dir }}/scrapes"
     state: directory
-    mode: '0644'
+    mode: '0755'
 
 - name: Make sure prometheus rule config directory exists
   ansible.builtin.file:
     path: "{{ compose_base_prometheus_config_dir }}/rules"
     state: directory
-    mode: '0644'
+    mode: '0755'
 
 - name: Copy scrape configs
   ansible.builtin.template:
