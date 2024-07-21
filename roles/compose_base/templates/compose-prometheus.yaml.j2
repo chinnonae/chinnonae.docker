@@ -31,6 +31,8 @@ services:
       - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
       - ./prometheus/scrapes:/etc/prometheus/scrapes:ro
       - ./prometheus/rules:/etc/prometheus/rules:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   prometheus: {}
