@@ -7,7 +7,7 @@ services:
       - --storage.tsdb.retention.time=30d
       - --storage.tsdb.retention.size=20GB
       - --storage.tsdb.wal-compression
-    networks
+    networks:
       - traefik
       - prometheus
     labels:
