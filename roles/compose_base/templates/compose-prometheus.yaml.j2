@@ -25,8 +25,6 @@ services:
       - ./prometheus/scrapes:/etc/prometheus/scrapes:ro
       - ./prometheus/rules:/etc/prometheus/rules:ro
 
-  alertmanager:
-
 volumes:
   prometheus: {}
 
