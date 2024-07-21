@@ -21,6 +21,6 @@
   ansible.builtin.include_tasks: traefik.yml
 
 - name: Docker Compose Up
-  communtiy.docker.docker_compose_v2:
+  community.docker.docker_compose_v2:
     project_src: "{{ compose_base_project_dir }}"
   register: docker_compose
