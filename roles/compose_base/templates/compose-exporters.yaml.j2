@@ -1,6 +1,6 @@
 services:
   cadvisor:
-    image: "{{ compose_base_cadvisor_image_url }}:{{ compose_base_cadvisor_image_tag }}
+    image: "{{ compose_base_cadvisor_image_url }}:{{ compose_base_cadvisor_image_tag }}"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
