@@ -27,6 +27,6 @@
 
 - name: Copy prometheus config
   ansible.builtin.template:
-    src: "prometheus/prometheus.yml.j2"
-    dest: "{{ compose_base_prometheus_config_dir }}/prometheus.yml"
+    src: "prometheus/prometheus.yaml.j2"
+    dest: "{{ compose_base_prometheus_config_dir }}/prometheus.yaml"
     mode: '0644'
