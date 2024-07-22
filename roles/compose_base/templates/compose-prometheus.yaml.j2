@@ -3,6 +3,7 @@
 services:
   prometheus:
     image: "{{ compose_base_prometheus_image_url }}:{{ compose_base_prometheus_image_tag }}"
+    user: root
     command:
       - --storage.tsdb.retention.time=30d
       - --storage.tsdb.retention.size=20GB
