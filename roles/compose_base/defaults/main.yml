@@ -14,8 +14,15 @@ compose_base_prometheus_config_dir: "{{ compose_base_project_dir }}/prometheus"
 compose_base_prometheus_image_url: "prom/prometheus"
 compose_base_prometheus_image_tag: "latest"
 compose_base_prometheus_host: "prometheus.localhost"
-compose_base_prometheus_users: "prometheus:$2y$10$LwA4BD7M/6X42.EzryolduOi2kDxGXWLgujV.V1Ze9V1pR./brpNS,"
+compose_base_prometheus_users: "prometheus:$2y$10$LwA4BD7M/6X42.EzryolduOi2kDxGXWLgujV.V1Ze9V1pR./brpNS"
 compose_base_prometheus_web_path_prefix: "/p"
+
+compose_base_alertmanager_config_dir: "{{ compose_base_project_dir }}/alertmanager"
+compose_base_alertmanager_image_url: "prom/alertmanager"
+compose_base_alertmanager_image_tag: "latest"
+compose_base_alertmanager_host: "alertmanager.localhost"
+compose_base_alertmanager_users: "{{ compose_base_prometheus_users }}"
+compose_base_alertmanager_web_path_prefix: "/a"
 
 compose_base_cadvisor_image_url: gcr.io/cadvisor/cadvisor
 compose_base_cadvisor_image_tag: v0.49.1

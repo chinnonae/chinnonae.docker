@@ -1,0 +1,17 @@
+- name: Make sure alertmanager config directory exists
+  ansible.builtin.file:
+    path: "{{ compose_base_alertmanager_config_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Make sure alertmanager template directory exists
+  ansible.builtin.file:
+    path: "{{ compose_base_alertmanager_config_dir }}/templates"
+    state: directory
+    mode: '0755'
+
+- name: Copy alertmanager config
+  ansible.builtin.template:
+    src: alertmanager/alertmanager.yaml.j2
+    dest: "{{ compose_base_alertmanager_config_dir }}/alertmanager.yaml"
+    mode: '0644'
