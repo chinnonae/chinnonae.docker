@@ -8,6 +8,14 @@ scrape_configs:
       - source_labels: [__meta_docker_container_label_prometheus_scrape]
         regex: "true"
         action: keep
+      - source_labels: [__meta_docker_container_network_mode]
+        regex: "prometheus"
+        action: keep
+      - regex: "__meta_docker_container_label_com_docker_(compose_(project|service))"
+        action: labelmap
+    metric_relabel_configs:
+      - regex: "container_label_com_docker_(compose_(project|service))"
+        action: labelmap
   - job_name: node_exporter
     static_configs:
       - targets:
