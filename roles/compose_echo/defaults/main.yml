@@ -1,7 +1,7 @@
 ---
-docker_echo_project_dir: "/opt/echo"
+compose_echo_project_dir: "/opt/echo"
 
-docker_echo_host: "echo.localhost"
+compose_echo_host: "echo.localhost"
 
-docker_echo_image_url: "jmalloc/echo-server"
-docker_echo_image_tag: "v0.3.7"
+compose_echo_image_url: "jmalloc/echo-server"
+compose_echo_image_tag: "v0.3.7"
