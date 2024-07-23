@@ -21,6 +21,9 @@
 - name: Ensure prometheus configs exists
   ansible.builtin.include_tasks: prometheus.yml
 
+- name: Ensure alertmanager configs exists
+  ansible.builtin.include_tasks: alertmanager.yml
+
 - name: Ensure traefik configs exists
   ansible.builtin.include_tasks: traefik.yml
 
