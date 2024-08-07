@@ -1,0 +1,15 @@
+---
+compose_zitadel_project_dir: "/opt/zitadel"
+
+compose_zitadel_image_url: ghcr.io/zitadel/zitadel
+compose_zitadel_image_tag: latest
+
+compose_zitadel_host: "zitadel.localhost"
+compose_zitadel_masterkey: "The_Master_Key_Must_Be_32_bytes_"
+
+compose_zitadel_db_username: "zitadel"
+compose_zitadel_db_password: "zitadel"
+compose_zitadel_db_dbname: "zitadel"
+compose_zitadel_db_host: "postgres"
+compose_zitadel_db_port: "5432"
+compose_zitadel_db_ssl: "disable"
