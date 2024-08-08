@@ -1,0 +1,1056 @@
+{{ ansible_managed | comment }}
+---
+https://github.com/zitadel/zitadel/blob/main/cmd/defaults.yaml
+
+Log:
+  Level: info
+  Formatter:
+    Format: text
+
+Metrics:
+  Type: none
+
+Tracing:
+  Type: none
+
+Telemetry:
+  Enabled: false
+
+Port: 8080
+ExternalPort: 443
+ExternalDomain: "{{ compose_zitadel_host }}"
+ExternalSecure: true
+
+TLS:
+  Enabled: false
+
+InstanceHostHeaders:
+  - "x-zitadel-instance-host"
+PublicHostHeaders:
+  - "x-zitadel-public-host"
+
+WebAuthNName: "{{ compose_zitadel_host }}"
+
+Machine:
+  Identification:
+    PrivateIp:
+      Enabled: true
+    Hostname:
+      Enabled: true
+    Webhook:
+      Enabled: false
+
+AssetStorage:
+  Type: db
+  Cache:
+    MaxAge: 5s 
+    SharedMaxAge: 168h
+
+Projections:
+  TransactionDuration: 500ms
+  RequeueEvery: 60s
+  RetryFailedAfter: 1s
+  MaxFailureCount: 5
+  BulkLimit: 200
+  HandleActiveInstances: 0s
+  Customizations:
+    Projects:
+      TransactionDuration: 2s
+    custom_texts:
+      TransactionDuration: 2s
+      BulkLimit: 400
+    project_grant_fields:
+      TransactionDuration: 0s
+      BulkLimit: 2000
+    org_domain_verified_fields:
+      TransactionDuration: 0s
+      BulkLimit: 2000
+    Notifications:
+      MaxFailureCount: 10
+      TransactionDuration: 5s
+    password_complexities:
+      TransactionDuration: 2s
+    lockout_policy:
+      TransactionDuration: 2s
+    NotificationsQuotas:
+      HandleActiveInstances: 0s
+      MaxFailureCount: 10
+      RequeueEvery: 300s
+      TransactionDuration: 5s
+    milestones:
+      BulkLimit: 50
+    Telemetry:
+      HandleActiveInstances: 0s
+      MaxFailureCount: 0
+      RequeueEvery: 3300s
+
+Auth:
+  SearchLimit: 1000
+  Spooler:
+    TransactionDuration: 10s
+    BulkLimit: 100
+    FailureCountUntilSkip: 5
+    HandleActiveInstances: 0s
+  AmountOfCachedAuthRequests: 0
+
+Admin:
+  SearchLimit: 1000
+  Spooler:
+    TransactionDuration: 10s
+    BulkLimit: 200
+    FailureCountUntilSkip: 5
+    HandleActiveInstances: 0s
+
+UserAgentCookie:
+  Name: zitadel.useragent
+  MaxAge: 8760h
+
+OIDC:
+  CodeMethodS256: true
+  AuthMethodPost: true
+  AuthMethodPrivateKeyJWT: true
+  GrantTypeRefreshToken: true
+  RequestObjectSupported: true
+  SigningKeyAlgorithm: RS256
+  DefaultAccessTokenLifetime: 12h
+  DefaultIdTokenLifetime: 12h
+  DefaultRefreshTokenIdleExpiration: 720h
+  DefaultRefreshTokenExpiration: 2160h
+  Cache:
+    MaxAge: 12h
+    SharedMaxAge: 168h
+  CustomEndpoints:
+    Auth:
+      Path: /oauth/v2/authorize
+    Token:
+      Path: /oauth/v2/token
+    Introspection:
+      Path: /oauth/v2/introspect
+    Userinfo:
+      Path: /oidc/v1/userinfo
+    Revocation:
+      Path: /oauth/v2/revoke
+    EndSession:
+      Path: /oidc/v1/end_session
+    Keys:
+      Path: /oauth/v2/keys
+    DeviceAuth:
+      Path: /oauth/v2/device_authorization
+  DefaultLoginURLV2: "/login?authRequest="
+  DefaultLogoutURLV2: "/logout?post_logout_redirect="
+  PublicKeyCacheMaxAge: 24h
+
+SAML:
+  ProviderConfig:
+    MetadataConfig:
+      Path: "/metadata"
+      SignatureAlgorithm: "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
+    IDPConfig:
+      SignatureAlgorithm: "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
+      WantAuthRequestsSigned: true
+      Endpoints:
+    #Organisation:
+    #  Name: ZITADEL
+    #  URL: https://zitadel.com
+    #ContactPerson:
+    #  ContactType: "technical"
+    #  Company: ZITADEL
+    #  EmailAddress: hi@zitadel.com
+
+Login:
+  LanguageCookieName: zitadel.login.lang
+  CSRFCookieName: zitadel.login.csrf
+  Cache:
+    MaxAge: 12h
+    SharedMaxAge: 168h
+  DefaultOTPEmailURLV2: "/otp/verify?loginName={{ '{{' }}.LoginName{{ '}}' }}&code={{ '{{' }}.Code{{ '}}' }}"
+
+Console:
+  ShortCache:
+    MaxAge: 0m
+    SharedMaxAge: 5m
+  LongCache:
+    MaxAge: 12h
+    SharedMaxAge: 168h
+  InstanceManagementURL: ""
+
+EncryptionKeys:
+  DomainVerification:
+    EncryptionKeyID: "domainVerificationKey"
+    DecryptionKeyIDs:
+  IDPConfig:
+    EncryptionKeyID: "idpConfigKey"
+    DecryptionKeyIDs:
+  OIDC:
+    EncryptionKeyID: "oidcKey"
+    DecryptionKeyIDs:
+  SAML:
+    EncryptionKeyID: "samlKey"
+    DecryptionKeyIDs:
+  OTP:
+    EncryptionKeyID: "otpKey"
+    DecryptionKeyIDs:
+  SMS:
+    EncryptionKeyID: "smsKey"
+    DecryptionKeyIDs:
+  SMTP:
+    EncryptionKeyID: "smtpKey"
+    DecryptionKeyIDs:
+  User:
+    EncryptionKeyID: "userKey"
+    DecryptionKeyIDs:
+  CSRFCookieKeyID: "csrfCookieKey"
+  UserAgentCookieKeyID: "userAgentCookieKey"
+
+SystemAPIUsers: []
+
+SystemDefaults:
+  SecretGenerators:
+    MachineKeySize: 2048
+    ApplicationKeySize: 2048
+  PasswordHasher:
+    Hasher:
+      Algorithm: bcrypt
+      Cost: 16
+    Verifiers: []
+  SecretHasher:
+    Hasher:
+      Algorithm: bcrypt
+      Cost: 10
+    Verifiers: []
+  Multifactors:
+    OTP:
+      Issuer: "{{ compose_zitadel_host }}"
+  DomainVerification:
+    VerificationGenerator:
+      Length: 32
+      IncludeLowerLetters: true
+      IncludeUpperLetters: true
+      IncludeDigits: true
+      IncludeSymbols: false
+  Notifications:
+    FileSystemPath: ".notifications/"
+  KeyConfig:
+    Size: 2048
+    CertificateSize: 4096
+    PrivateKeyLifetime: 6h
+    PublicKeyLifetime: 30h
+    CertificateLifetime: 8766h
+
+Actions:
+  HTTP:
+    DenyList:
+      - localhost
+      - "127.0.0.1"
+
+LogStore:
+  Access:
+    Stdout:
+      Enabled: false
+  Execution:
+    Stdout:
+      Enabled: true
+
+Quotas:
+  Access:
+    Enabled: false
+    Debounce:
+      MinFrequency: 0s
+      MaxBulkSize: 0
+    ExhaustedCookieKey: "zitadel.quota.exhausted"
+    ExhaustedCookieMaxAge: "300s"
+  Execution:
+    Enabled: false
+    Debounce:
+      MinFrequency: 0s
+      MaxBulkSize: 0
+
+Eventstore:
+  PushTimeout: 15s
+  MaxRetries: 5
+
+DefaultInstance:
+  InstanceName: ZITADEL
+  DefaultLanguage: en
+  Org:
+    Name: ZITADEL
+    Human:
+      UserName: zitadel-admin
+      FirstName: ZITADEL
+      LastName: Admin
+      NickName:
+      DisplayName:
+      Email:
+        Address:
+        Verified: false
+      PreferredLanguage: en
+      Gender:
+      Phone:
+        Number:
+        Verified:
+      Password:
+    Machine:
+      Machine:
+        Username:
+        Name:
+      MachineKey:
+        ExpirationDate:
+        Type:
+      Pat:
+        ExpirationDate:
+  SecretGenerators:
+    ClientSecret:
+      Length: 64
+      IncludeLowerLetters: true
+      IncludeUpperLetters: true
+      IncludeDigits: true
+      IncludeSymbols: false
+    InitializeUserCode:
+      Length: 6
+      Expiry: "72h"
+      IncludeLowerLetters: false
+      IncludeUpperLetters: true
+      IncludeDigits: true
+      IncludeSymbols: false
+    EmailVerificationCode:
+      Length: 6
+      Expiry: "1h"
+      IncludeLowerLetters: false
+      IncludeUpperLetters: true
+      IncludeDigits: true
+      IncludeSymbols: false
+    PhoneVerificationCode:
+      Length: 6
+      Expiry: "1h"
+      IncludeLowerLetters: false
+      IncludeUpperLetters: true
+      IncludeDigits: true
+      IncludeSymbols: false
+    PasswordVerificationCode:
+      Length: 6
+      Expiry: "1h"
+      IncludeLowerLetters: false
+      IncludeUpperLetters: true
+      IncludeDigits: true
+      IncludeSymbols: false
+    PasswordlessInitCode:
+      Length: 12
+      Expiry: "1h"
+      IncludeLowerLetters: true
+      IncludeUpperLetters: true
+      IncludeDigits: true
+      IncludeSymbols: false
+    DomainVerification:
+      Length: 32
+      IncludeLowerLetters: true
+      IncludeUpperLetters: true
+      IncludeDigits: true
+      IncludeSymbols: false
+    OTPSMS:
+      Length: 8
+      Expiry: "5m"
+      IncludeLowerLetters: false
+      IncludeUpperLetters: false
+      IncludeDigits: true
+      IncludeSymbols: false
+    OTPEmail:
+      Length: 8
+      Expiry: "5m"
+      IncludeLowerLetters: false
+      IncludeUpperLetters: false
+      IncludeDigits: true
+      IncludeSymbols: false
+  PasswordComplexityPolicy:
+    MinLength: 8
+    HasLowercase: true
+    HasUppercase: true
+    HasNumber: true
+    HasSymbol: true
+  PasswordAgePolicy:
+    ExpireWarnDays: 0
+    MaxAgeDays: 0
+  DomainPolicy:
+    UserLoginMustBeDomain: false
+    ValidateOrgDomains: false
+    SMTPSenderAddressMatchesInstanceDomain: false
+  LoginPolicy:
+    AllowUsernamePassword: true
+    AllowRegister: true
+    AllowExternalIDP: true
+    ForceMFA: false
+    HidePasswordReset: false
+    IgnoreUnknownUsernames: false
+    AllowDomainDiscovery: true
+    PasswordlessType: 1
+    DefaultRedirectURI:
+    PasswordCheckLifetime: 240h
+    ExternalLoginCheckLifetime: 240h
+    MfaInitSkipLifetime: 720h
+    SecondFactorCheckLifetime: 18h
+    MultiFactorCheckLifetime: 12h
+  PrivacyPolicy:
+    TOSLink: ""
+    PrivacyLink: ""
+    HelpLink: ""
+    SupportEmail: ""
+    DocsLink: https://zitadel.com/docs
+    CustomLink: ""
+    CustomLinkText: ""
+  NotificationPolicy:
+    PasswordChange: true
+  LabelPolicy:
+    PrimaryColor: "#5469d4"
+    BackgroundColor: "#fafafa"
+    WarnColor: "#cd3d56"
+    FontColor: "#000000"
+    PrimaryColorDark: "#2073c4"
+    BackgroundColorDark: "#111827"
+    WarnColorDark: "#ff3b5b"
+    FontColorDark: "#ffffff"
+    HideLoginNameSuffix: false
+    ErrorMsgPopup: false
+    DisableWatermark: false
+  LockoutPolicy:
+    MaxPasswordAttempts: 0
+    MaxOTPAttempts: 0
+    ShouldShowLockoutFailure: true
+  EmailTemplate: CjwhZG9jdHlwZSBodG1sPgo8aHRtbCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94aHRtbCIgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVybjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSI+CjxoZWFkPgogIDx0aXRsZT4KCiAgPC90aXRsZT4KICA8IS0tW2lmICFtc29dPjwhLS0+CiAgPG1ldGEgaHR0cC1lcXVpdj0iWC1VQS1Db21wYXRpYmxlIiBjb250ZW50PSJJRT1lZGdlIj4KICA8IS0tPCFbZW5kaWZdLS0+CiAgPG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNoYXJzZXQ9VVRGLTgiPgogIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MSI+CiAgPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KICAgICNvdXRsb29rIGEgeyBwYWRkaW5nOjA7IH0KICAgIGJvZHkgeyBtYXJnaW46MDtwYWRkaW5nOjA7LXdlYmtpdC10ZXh0LXNpemUtYWRqdXN0OjEwMCU7LW1zLXRleHQtc2l6ZS1hZGp1c3Q6MTAwJTsgfQogICAgdGFibGUsIHRkIHsgYm9yZGVyLWNvbGxhcHNlOmNvbGxhcHNlO21zby10YWJsZS1sc3BhY2U6MHB0O21zby10YWJsZS1yc3BhY2U6MHB0OyB9CiAgICBpbWcgeyBib3JkZXI6MDtoZWlnaHQ6YXV0bztsaW5lLWhlaWdodDoxMDAlOyBvdXRsaW5lOm5vbmU7dGV4dC1kZWNvcmF0aW9uOm5vbmU7LW1zLWludGVycG9sYXRpb24tbW9kZTpiaWN1YmljOyB9CiAgICBwIHsgZGlzcGxheTpibG9jazttYXJnaW46MTNweCAwOyB9CiAgPC9zdHlsZT4KICA8IS0tW2lmIG1zb10+CiAgPHhtbD4KICAgIDxvOk9mZmljZURvY3VtZW50U2V0dGluZ3M+CiAgICAgIDxvOkFsbG93UE5HLz4KICAgICAgPG86UGl4ZWxzUGVySW5jaD45NjwvbzpQaXhlbHNQZXJJbmNoPgogICAgPC9vOk9mZmljZURvY3VtZW50U2V0dGluZ3M+CiAgPC94bWw+CiAgPCFbZW5kaWZdLS0+CiAgPCEtLVtpZiBsdGUgbXNvIDExXT4KICA8c3R5bGUgdHlwZT0idGV4dC9jc3MiPgogICAgLm1qLW91dGxvb2stZ3JvdXAtZml4IHsgd2lkdGg6MTAwJSAhaW1wb3J0YW50OyB9CiAgPC9zdHlsZT4KICA8IVtlbmRpZl0tLT4KCgogIDxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+CiAgICBAbWVkaWEgb25seSBzY3JlZW4gYW5kIChtaW4td2lkdGg6NDgwcHgpIHsKICAgICAgLm1qLWNvbHVtbi1wZXItMTAwIHsgd2lkdGg6MTAwJSAhaW1wb3J0YW50OyBtYXgtd2lkdGg6IDEwMCU7IH0KICAgICAgLm1qLWNvbHVtbi1wZXItNjAgeyB3aWR0aDo2MCUgIWltcG9ydGFudDsgbWF4LXdpZHRoOiA2MCU7IH0KICAgIH0KICA8L3N0eWxlPgoKCiAgPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCgoKICAgIEBtZWRpYSBvbmx5IHNjcmVlbiBhbmQgKG1heC13aWR0aDo0ODBweCkgewogICAgICB0YWJsZS5tai1mdWxsLXdpZHRoLW1vYmlsZSB7IHdpZHRoOiAxMDAlICFpbXBvcnRhbnQ7IH0KICAgICAgdGQubWotZnVsbC13aWR0aC1tb2JpbGUgeyB3aWR0aDogYXV0byAhaW1wb3J0YW50OyB9CiAgICB9CgogIDwvc3R5bGU+CiAgPHN0eWxlIHR5cGU9InRleHQvY3NzIj4uc2hhZG93IGEgewogICAgYm94LXNoYWRvdzogMHB4IDNweCAxcHggLTJweCByZ2JhKDAsIDAsIDAsIDAuMiksIDBweCAycHggMnB4IDBweCByZ2JhKDAsIDAsIDAsIDAuMTQpLCAwcHggMXB4IDVweCAwcHggcmdiYSgwLCAwLCAwLCAwLjEyKTsKICB9PC9zdHlsZT4KCiAge3tpZiAuRm9udFVSTH19CiAgPHN0eWxlPgogICAgQGZvbnQtZmFjZSB7CiAgICAgIGZvbnQtZmFtaWx5OiAne3suRm9udEZhY2VGYW1pbHl9fSc7CiAgICAgIGZvbnQtc3R5bGU6IG5vcm1hbDsKICAgICAgZm9udC1kaXNwbGF5OiBzd2FwOwogICAgICBzcmM6IHVybCh7ey5Gb250VVJMfX0pOwogICAgfQogIDwvc3R5bGU+CiAge3tlbmR9fQoKPC9oZWFkPgo8Ym9keSBzdHlsZT0id29yZC1zcGFjaW5nOm5vcm1hbDsiPgoKCjxkaXYKICAgICAgICBzdHlsZT0iIgo+CgogIDx0YWJsZQogICAgICAgICAgYWxpZ249ImNlbnRlciIgYm9yZGVyPSIwIiBjZWxscGFkZGluZz0iMCIgY2VsbHNwYWNpbmc9IjAiIHJvbGU9InByZXNlbnRhdGlvbiIgc3R5bGU9ImJhY2tncm91bmQ6e3suQmFja2dyb3VuZENvbG9yfX07YmFja2dyb3VuZC1jb2xvcjp7ey5CYWNrZ3JvdW5kQ29sb3J9fTt3aWR0aDoxMDAlO2JvcmRlci1yYWRpdXM6MTZweDsiCiAgPgogICAgPHRib2R5PgogICAgPHRyPgogICAgICA8dGQ+CgoKICAgICAgICA8IS0tW2lmIG1zbyB8IElFXT48dGFibGUgYWxpZ249ImNlbnRlciIgYm9yZGVyPSIwIiBjZWxscGFkZGluZz0iMCIgY2VsbHNwYWNpbmc9IjAiIGNsYXNzPSIiIHN0eWxlPSJ3aWR0aDo4MDBweDsiIHdpZHRoPSI4MDAiID48dHI+PHRkIHN0eWxlPSJsaW5lLWhlaWdodDowcHg7Zm9udC1zaXplOjBweDttc28tbGluZS1oZWlnaHQtcnVsZTpleGFjdGx5OyI+PCFbZW5kaWZdLS0+CgoKICAgICAgICA8ZGl2ICBzdHlsZT0ibWFyZ2luOjBweCBhdXRvO2JvcmRlci1yYWRpdXM6MTZweDttYXgtd2lkdGg6ODAwcHg7Ij4KCiAgICAgICAgICA8dGFibGUKICAgICAgICAgICAgICAgICAgYWxpZ249ImNlbnRlciIgYm9yZGVyPSIwIiBjZWxscGFkZGluZz0iMCIgY2VsbHNwYWNpbmc9IjAiIHJvbGU9InByZXNlbnRhdGlvbiIgc3R5bGU9IndpZHRoOjEwMCU7Ym9yZGVyLXJhZGl1czoxNnB4OyIKICAgICAgICAgID4KICAgICAgICAgICAgPHRib2R5PgogICAgICAgICAgICA8dHI+CiAgICAgICAgICAgICAgPHRkCiAgICAgICAgICAgICAgICAgICAgICBzdHlsZT0iZGlyZWN0aW9uOmx0cjtmb250LXNpemU6MHB4O3BhZGRpbmc6MjBweCAwO3BhZGRpbmctbGVmdDowO3RleHQtYWxpZ246Y2VudGVyOyIKICAgICAgICAgICAgICA+CiAgICAgICAgICAgICAgICA8IS0tW2lmIG1zbyB8IElFXT48dGFibGUgcm9sZT0icHJlc2VudGF0aW9uIiBib3JkZXI9IjAiIGNlbGxwYWRkaW5nPSIwIiBjZWxsc3BhY2luZz0iMCI+PHRyPjx0ZCBjbGFzcz0iIiB3aWR0aD0iODAwcHgiID48IVtlbmRpZl0tLT4KCiAgICAgICAgICAgICAgICA8dGFibGUKICAgICAgICAgICAgICAgICAgICAgICAgYWxpZ249ImNlbnRlciIgYm9yZGVyPSIwIiBjZWxscGFkZGluZz0iMCIgY2VsbHNwYWNpbmc9IjAiIHJvbGU9InByZXNlbnRhdGlvbiIgc3R5bGU9IndpZHRoOjEwMCU7IgogICAgICAgICAgICAgICAgPgogICAgICAgICAgICAgICAgICA8dGJvZHk+CiAgICAgICAgICAgICAgICAgIDx0cj4KICAgICAgICAgICAgICAgICAgICA8dGQ+CgoKICAgICAgICAgICAgICAgICAgICAgIDwhLS1baWYgbXNvIHwgSUVdPjx0YWJsZSBhbGlnbj0iY2VudGVyIiBib3JkZXI9IjAiIGNlbGxwYWRkaW5nPSIwIiBjZWxsc3BhY2luZz0iMCIgY2xhc3M9IiIgc3R5bGU9IndpZHRoOjgwMHB4OyIgd2lkdGg9IjgwMCIgPjx0cj48dGQgc3R5bGU9ImxpbmUtaGVpZ2h0OjBweDtmb250LXNpemU6MHB4O21zby1saW5lLWhlaWdodC1ydWxlOmV4YWN0bHk7Ij48IVtlbmRpZl0tLT4KCgogICAgICAgICAgICAgICAgICAgICAgPGRpdiAgc3R5bGU9Im1hcmdpbjowcHggYXV0bzttYXgtd2lkdGg6ODAwcHg7Ij4KCiAgICAgICAgICAgICAgICAgICAgICAgIDx0YWJsZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFsaWduPSJjZW50ZXIiIGJvcmRlcj0iMCIgY2VsbHBhZGRpbmc9IjAiIGNlbGxzcGFjaW5nPSIwIiByb2xlPSJwcmVzZW50YXRpb24iIHN0eWxlPSJ3aWR0aDoxMDAlOyIKICAgICAgICAgICAgICAgICAgICAgICAgPgogICAgICAgICAgICAgICAgICAgICAgICAgIDx0Ym9keT4KICAgICAgICAgICAgICAgICAgICAgICAgICA8dHI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3R5bGU9ImRpcmVjdGlvbjpsdHI7Zm9udC1zaXplOjBweDtwYWRkaW5nOjA7dGV4dC1hbGlnbjpjZW50ZXI7IgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8IS0tW2lmIG1zbyB8IElFXT48dGFibGUgcm9sZT0icHJlc2VudGF0aW9uIiBib3JkZXI9IjAiIGNlbGxwYWRkaW5nPSIwIiBjZWxsc3BhY2luZz0iMCI+PHRyPjx0ZCBjbGFzcz0iIiBzdHlsZT0id2lkdGg6ODAwcHg7IiA+PCFbZW5kaWZdLS0+CgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZGl2CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9Im1qLWNvbHVtbi1wZXItMTAwIG1qLW91dGxvb2stZ3JvdXAtZml4IiBzdHlsZT0iZm9udC1zaXplOjA7bGluZS1oZWlnaHQ6MDt0ZXh0LWFsaWduOmxlZnQ7ZGlzcGxheTppbmxpbmUtYmxvY2s7d2lkdGg6MTAwJTtkaXJlY3Rpb246bHRyOyIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwhLS1baWYgbXNvIHwgSUVdPjx0YWJsZSBib3JkZXI9IjAiIGNlbGxwYWRkaW5nPSIwIiBjZWxsc3BhY2luZz0iMCIgcm9sZT0icHJlc2VudGF0aW9uIiA+PHRyPjx0ZCBzdHlsZT0idmVydGljYWwtYWxpZ246dG9wO3dpZHRoOjgwMHB4OyIgPjwhW2VuZGlmXS0tPgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZGl2CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz0ibWotY29sdW1uLXBlci0xMDAgbWotb3V0bG9vay1ncm91cC1maXgiIHN0eWxlPSJmb250LXNpemU6MHB4O3RleHQtYWxpZ246bGVmdDtkaXJlY3Rpb246bHRyO2Rpc3BsYXk6aW5saW5lLWJsb2NrO3ZlcnRpY2FsLWFsaWduOnRvcDt3aWR0aDoxMDAlOyIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+CgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRhYmxlCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJvcmRlcj0iMCIgY2VsbHBhZGRpbmc9IjAiIGNlbGxzcGFjaW5nPSIwIiByb2xlPSJwcmVzZW50YXRpb24iIHdpZHRoPSIxMDAlIgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGJvZHk+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0cj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQgIHN0eWxlPSJ2ZXJ0aWNhbC1hbGlnbjp0b3A7cGFkZGluZzowOyI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7e2lmIC5Mb2dvVVJMfX0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0YWJsZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBib3JkZXI9IjAiIGNlbGxwYWRkaW5nPSIwIiBjZWxsc3BhY2luZz0iMCIgcm9sZT0icHJlc2VudGF0aW9uIiBzdHlsZT0iIiB3aWR0aD0iMTAwJSIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRib2R5PgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRyPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYWxpZ249ImNlbnRlciIgc3R5bGU9ImZvbnQtc2l6ZTowcHg7cGFkZGluZzo1MHB4IDAgMzBweCAwO3dvcmQtYnJlYWs6YnJlYWstd29yZDsiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0YWJsZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBib3JkZXI9IjAiIGNlbGxwYWRkaW5nPSIwIiBjZWxsc3BhY2luZz0iMCIgcm9sZT0icHJlc2VudGF0aW9uIiBzdHlsZT0iYm9yZGVyLWNvbGxhcHNlOmNvbGxhcHNlO2JvcmRlci1zcGFjaW5nOjBweDsiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0Ym9keT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRyPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZCAgc3R5bGU9IndpZHRoOjE4MHB4OyI+CgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGltZwogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBoZWlnaHQ9ImF1dG8iIHNyYz0ie3suTG9nb1VSTH19IiBzdHlsZT0iYm9yZGVyOjA7Ym9yZGVyLXJhZGl1czo4cHg7ZGlzcGxheTpibG9jaztvdXRsaW5lOm5vbmU7dGV4dC1kZWNvcmF0aW9uOm5vbmU7aGVpZ2h0OmF1dG87d2lkdGg6MTAwJTtmb250LXNpemU6MTNweDsiIHdpZHRoPSIxODAiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAvPgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RkPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RyPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3Rib2R5PgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC90YWJsZT4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC90ZD4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC90cj4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvdGJvZHk+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RhYmxlPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAge3tlbmR9fQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvdGQ+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvdHI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvdGJvZHk+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RhYmxlPgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCEtLVtpZiBtc28gfCBJRV0+PC90ZD48L3RyPjwvdGFibGU+PCFbZW5kaWZdLS0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCEtLVtpZiBtc28gfCBJRV0+PC90ZD48L3RyPjwvdGFibGU+PCFbZW5kaWZdLS0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RkPgogICAgICAgICAgICAgICAgICAgICAgICAgIDwvdHI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgPC90Ym9keT4KICAgICAgICAgICAgICAgICAgICAgICAgPC90YWJsZT4KCiAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj4KCgogICAgICAgICAgICAgICAgICAgICAgPCEtLVtpZiBtc28gfCBJRV0+PC90ZD48L3RyPjwvdGFibGU+PCFbZW5kaWZdLS0+CgoKICAgICAgICAgICAgICAgICAgICA8L3RkPgogICAgICAgICAgICAgICAgICA8L3RyPgogICAgICAgICAgICAgICAgICA8L3Rib2R5PgogICAgICAgICAgICAgICAgPC90YWJsZT4KCiAgICAgICAgICAgICAgICA8IS0tW2lmIG1zbyB8IElFXT48L3RkPjwvdHI+PHRyPjx0ZCBjbGFzcz0iIiB3aWR0aD0iODAwcHgiID48IVtlbmRpZl0tLT4KCiAgICAgICAgICAgICAgICA8dGFibGUKICAgICAgICAgICAgICAgICAgICAgICAgYWxpZ249ImNlbnRlciIgYm9yZGVyPSIwIiBjZWxscGFkZGluZz0iMCIgY2VsbHNwYWNpbmc9IjAiIHJvbGU9InByZXNlbnRhdGlvbiIgc3R5bGU9IndpZHRoOjEwMCU7IgogICAgICAgICAgICAgICAgPgogICAgICAgICAgICAgICAgICA8dGJvZHk+CiAgICAgICAgICAgICAgICAgIDx0cj4KICAgICAgICAgICAgICAgICAgICA8dGQ+CgoKICAgICAgICAgICAgICAgICAgICAgIDwhLS1baWYgbXNvIHwgSUVdPjx0YWJsZSBhbGlnbj0iY2VudGVyIiBib3JkZXI9IjAiIGNlbGxwYWRkaW5nPSIwIiBjZWxsc3BhY2luZz0iMCIgY2xhc3M9IiIgc3R5bGU9IndpZHRoOjgwMHB4OyIgd2lkdGg9IjgwMCIgPjx0cj48dGQgc3R5bGU9ImxpbmUtaGVpZ2h0OjBweDtmb250LXNpemU6MHB4O21zby1saW5lLWhlaWdodC1ydWxlOmV4YWN0bHk7Ij48IVtlbmRpZl0tLT4KCgogICAgICAgICAgICAgICAgICAgICAgPGRpdiAgc3R5bGU9Im1hcmdpbjowcHggYXV0bzttYXgtd2lkdGg6ODAwcHg7Ij4KCiAgICAgICAgICAgICAgICAgICAgICAgIDx0YWJsZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFsaWduPSJjZW50ZXIiIGJvcmRlcj0iMCIgY2VsbHBhZGRpbmc9IjAiIGNlbGxzcGFjaW5nPSIwIiByb2xlPSJwcmVzZW50YXRpb24iIHN0eWxlPSJ3aWR0aDoxMDAlOyIKICAgICAgICAgICAgICAgICAgICAgICAgPgogICAgICAgICAgICAgICAgICAgICAgICAgIDx0Ym9keT4KICAgICAgICAgICAgICAgICAgICAgICAgICA8dHI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3R5bGU9ImRpcmVjdGlvbjpsdHI7Zm9udC1zaXplOjBweDtwYWRkaW5nOjA7dGV4dC1hbGlnbjpjZW50ZXI7IgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8IS0tW2lmIG1zbyB8IElFXT48dGFibGUgcm9sZT0icHJlc2VudGF0aW9uIiBib3JkZXI9IjAiIGNlbGxwYWRkaW5nPSIwIiBjZWxsc3BhY2luZz0iMCI+PHRyPjx0ZCBjbGFzcz0iIiBzdHlsZT0idmVydGljYWwtYWxpZ246dG9wO3dpZHRoOjQ4MHB4OyIgPjwhW2VuZGlmXS0tPgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGRpdgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPSJtai1jb2x1bW4tcGVyLTYwIG1qLW91dGxvb2stZ3JvdXAtZml4IiBzdHlsZT0iZm9udC1zaXplOjBweDt0ZXh0LWFsaWduOmxlZnQ7ZGlyZWN0aW9uOmx0cjtkaXNwbGF5OmlubGluZS1ibG9jazt2ZXJ0aWNhbC1hbGlnbjp0b3A7d2lkdGg6MTAwJTsiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRhYmxlCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBib3JkZXI9IjAiIGNlbGxwYWRkaW5nPSIwIiBjZWxsc3BhY2luZz0iMCIgcm9sZT0icHJlc2VudGF0aW9uIiB3aWR0aD0iMTAwJSIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGJvZHk+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dHI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZCAgc3R5bGU9InZlcnRpY2FsLWFsaWduOnRvcDtwYWRkaW5nOjA7Ij4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRhYmxlCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBib3JkZXI9IjAiIGNlbGxwYWRkaW5nPSIwIiBjZWxsc3BhY2luZz0iMCIgcm9sZT0icHJlc2VudGF0aW9uIiBzdHlsZT0iIiB3aWR0aD0iMTAwJSIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGJvZHk+CgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRyPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhbGlnbj0iY2VudGVyIiBzdHlsZT0iZm9udC1zaXplOjBweDtwYWRkaW5nOjEwcHggMjVweDt3b3JkLWJyZWFrOmJyZWFrLXdvcmQ7IgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+CgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0eWxlPSJmb250LWZhbWlseTp7ey5Gb250RmFtaWx5fX07Zm9udC1zaXplOjI0cHg7Zm9udC13ZWlnaHQ6NTAwO2xpbmUtaGVpZ2h0OjE7dGV4dC1hbGlnbjpjZW50ZXI7Y29sb3I6e3suRm9udENvbG9yfX07IgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID57ey5HcmVldGluZ319PC9kaXY+CgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RkPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC90cj4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dHI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFsaWduPSJjZW50ZXIiIHN0eWxlPSJmb250LXNpemU6MHB4O3BhZGRpbmc6MTBweCAyNXB4O3dvcmQtYnJlYWs6YnJlYWstd29yZDsiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGRpdgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3R5bGU9ImZvbnQtZmFtaWx5Ont7LkZvbnRGYW1pbHl9fTtmb250LXNpemU6MTZweDtmb250LXdlaWdodDpsaWdodDtsaW5lLWhlaWdodDoxLjU7dGV4dC1hbGlnbjpjZW50ZXI7Y29sb3I6e3suRm9udENvbG9yfX07IgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID57ey5UZXh0fX08L2Rpdj4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvdGQ+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RyPgoKCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dHI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFsaWduPSJjZW50ZXIiIHZlcnRpY2FsLWFsaWduPSJtaWRkbGUiIGNsYXNzPSJzaGFkb3ciIHN0eWxlPSJmb250LXNpemU6MHB4O3BhZGRpbmc6MTBweCAyNXB4O3dvcmQtYnJlYWs6YnJlYWstd29yZDsiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRhYmxlCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBib3JkZXI9IjAiIGNlbGxwYWRkaW5nPSIwIiBjZWxsc3BhY2luZz0iMCIgcm9sZT0icHJlc2VudGF0aW9uIiBzdHlsZT0iYm9yZGVyLWNvbGxhcHNlOnNlcGFyYXRlO2xpbmUtaGVpZ2h0OjEwMCU7IgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0cj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRkCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYWxpZ249ImNlbnRlciIgYmdjb2xvcj0ie3suUHJpbWFyeUNvbG9yfX0iIHJvbGU9InByZXNlbnRhdGlvbiIgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci1yYWRpdXM6NnB4O2N1cnNvcjphdXRvO21zby1wYWRkaW5nLWFsdDoxMHB4IDI1cHg7YmFja2dyb3VuZDp7ey5QcmltYXJ5Q29sb3J9fTsiIHZhbGlnbj0ibWlkZGxlIgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGEKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGhyZWY9Int7LlVSTH19IiByZWw9Im5vb3BlbmVyIG5vcmVmZXJyZXIgbm90cmFjayIgc3R5bGU9ImRpc3BsYXk6aW5saW5lLWJsb2NrO2JhY2tncm91bmQ6e3suUHJpbWFyeUNvbG9yfX07Y29sb3I6I2ZmZmZmZjtmb250LWZhbWlseTp7ey5Gb250RmFtaWx5fX07Zm9udC1zaXplOjE0cHg7Zm9udC13ZWlnaHQ6NTAwO2xpbmUtaGVpZ2h0OjEyMCU7bWFyZ2luOjA7dGV4dC1kZWNvcmF0aW9uOm5vbmU7dGV4dC10cmFuc2Zvcm06bm9uZTtwYWRkaW5nOjEwcHggMjVweDttc28tcGFkZGluZy1hbHQ6MHB4O2JvcmRlci1yYWRpdXM6NnB4OyIgdGFyZ2V0PSJfYmxhbmsiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAge3suQnV0dG9uVGV4dH19CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9hPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RkPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC90cj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RhYmxlPgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC90ZD4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvdHI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7e2lmIC5JbmNsdWRlRm9vdGVyfX0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0cj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRkCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYWxpZ249ImNlbnRlciIgc3R5bGU9ImZvbnQtc2l6ZTowcHg7cGFkZGluZzoxMHB4IDI1cHg7cGFkZGluZy10b3A6MjBweDtwYWRkaW5nLXJpZ2h0OjIwcHg7cGFkZGluZy1ib3R0b206MjBweDtwYWRkaW5nLWxlZnQ6MjBweDt3b3JkLWJyZWFrOmJyZWFrLXdvcmQ7IgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+CgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxwCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHlsZT0iYm9yZGVyLXRvcDpzb2xpZCAycHggI2RiZGJkYjtmb250LXNpemU6MXB4O21hcmdpbjowcHggYXV0bzt3aWR0aDoxMDAlOyIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9wPgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8IS0tW2lmIG1zbyB8IElFXT48dGFibGUgYWxpZ249ImNlbnRlciIgYm9yZGVyPSIwIiBjZWxscGFkZGluZz0iMCIgY2VsbHNwYWNpbmc9IjAiIHN0eWxlPSJib3JkZXItdG9wOnNvbGlkIDJweCAjZGJkYmRiO2ZvbnQtc2l6ZToxcHg7bWFyZ2luOjBweCBhdXRvO3dpZHRoOjQ0MHB4OyIgcm9sZT0icHJlc2VudGF0aW9uIiB3aWR0aD0iNDQwcHgiID48dHI+PHRkIHN0eWxlPSJoZWlnaHQ6MDtsaW5lLWhlaWdodDowOyI+ICZuYnNwOwogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvdGQ+PC90cj48L3RhYmxlPjwhW2VuZGlmXS0tPgoKCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvdGQ+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RyPgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0cj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRkCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYWxpZ249ImNlbnRlciIgc3R5bGU9ImZvbnQtc2l6ZTowcHg7cGFkZGluZzoxNnB4O3dvcmQtYnJlYWs6YnJlYWstd29yZDsiCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGRpdgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3R5bGU9ImZvbnQtZmFtaWx5Ont7LkZvbnRGYW1pbHl9fTtmb250LXNpemU6MTNweDtsaW5lLWhlaWdodDoxO3RleHQtYWxpZ246Y2VudGVyO2NvbG9yOnt7LkZvbnRDb2xvcn19OyIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+e3suRm9vdGVyVGV4dH19PC9kaXY+CgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RkPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC90cj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHt7ZW5kfX0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvdGJvZHk+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC90YWJsZT4KCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvdGQ+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RyPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC90Ym9keT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RhYmxlPgoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+CgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8IS0tW2lmIG1zbyB8IElFXT48L3RkPjwvdHI+PC90YWJsZT48IVtlbmRpZl0tLT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvdGQ+CiAgICAgICAgICAgICAgICAgICAgICAgICAgPC90cj4KICAgICAgICAgICAgICAgICAgICAgICAgICA8L3Rib2R5PgogICAgICAgICAgICAgICAgICAgICAgICA8L3RhYmxlPgoKICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PgoKCiAgICAgICAgICAgICAgICAgICAgICA8IS0tW2lmIG1zbyB8IElFXT48L3RkPjwvdHI+PC90YWJsZT48IVtlbmRpZl0tLT4KCgogICAgICAgICAgICAgICAgICAgIDwvdGQ+CiAgICAgICAgICAgICAgICAgIDwvdHI+CiAgICAgICAgICAgICAgICAgIDwvdGJvZHk+CiAgICAgICAgICAgICAgICA8L3RhYmxlPgoKICAgICAgICAgICAgICAgIDwhLS1baWYgbXNvIHwgSUVdPjwvdGQ+PC90cj48L3RhYmxlPjwhW2VuZGlmXS0tPgogICAgICAgICAgICAgIDwvdGQ+CiAgICAgICAgICAgIDwvdHI+CiAgICAgICAgICAgIDwvdGJvZHk+CiAgICAgICAgICA8L3RhYmxlPgoKICAgICAgICA8L2Rpdj4KCgogICAgICAgIDwhLS1baWYgbXNvIHwgSUVdPjwvdGQ+PC90cj48L3RhYmxlPjwhW2VuZGlmXS0tPgoKCiAgICAgIDwvdGQ+CiAgICA8L3RyPgogICAgPC90Ym9keT4KICA8L3RhYmxlPgoKPC9kaXY+Cgo8L2JvZHk+CjwvaHRtbD4K
+  OIDCSettings:
+    AccessTokenLifetime: 12h
+    IdTokenLifetime: 12h
+    RefreshTokenIdleExpiration: 720h
+    RefreshTokenExpiration: 2160h
+  SMTPConfiguration:
+    SMTP:
+      Host:
+      User:
+      Password:
+    TLS:
+    From:
+    FromName:
+    ReplyToAddress:
+ 
+  MessageTexts:
+    - MessageTextType: InitCode
+      Language: de
+      Title: Zitadel - User initialisieren
+      PreHeader: User initialisieren
+      Subject: User initialisieren
+      Greeting: Hallo {{ '{{' }}.DisplayName {{ '}}' }},
+      Text: Dieser Benutzer wurde soeben im Zitadel erstellt. Mit dem Benutzernamen &lt;br&gt;&lt;strong&gt;{{ '{{' }}.PreferredLoginName{{ '}}' }},&lt;/strong&gt;&lt;br&gt; kannst du dich anmelden. Nutze den untenstehenden Button, um die Initialisierung abzuschliessen &lt;br&gt;(Code &lt;strong&gt;{{ '{{' }}.Code{{ '}}' }},&lt;/strong&gt;).&lt;br&gt; Falls du dieses Mail nicht angefordert hast, kannst du es einfach ignorieren.
+      ButtonText: Initialisierung abschliessen
+    - MessageTextType: PasswordReset
+      Language: de
+      Title: Zitadel - Passwort zurücksetzen
+      PreHeader: Passwort zurücksetzen
+      Subject: Passwort zurücksetzen
+      Greeting: Hallo {{ '{{' }}.DisplayName {{ '}}' }},
+      Text: Wir haben eine Anfrage für das Zurücksetzen deines Passwortes bekommen. Du kannst den untenstehenden Button verwenden, um dein Passwort zurückzusetzen &lt;br&gt;(Code &lt;strong&gt;{{ '{{' }}.Code{{ '}}' }},&lt;/strong&gt;).&lt;br&gt; Falls du dieses Mail nicht angefordert hast, kannst du es ignorieren.
+      ButtonText: Passwort zurücksetzen
+    - MessageTextType: VerifyEmail
+      Language: de
+      Title: Zitadel - Email verifizieren
+      PreHeader: Email verifizieren
+      Subject: Email verifizieren
+      Greeting: Hallo {{ '{{' }}.DisplayName {{ '}}' }},
+      Text: Eine neue E-Mail Adresse wurde hinzugefügt. Bitte verwende den untenstehenden Button um diese zu verifizieren &lt;br&gt;(Code &lt;strong&gt;{{ '{{' }}.Code{{ '}}' }},&lt;/strong&gt;).&lt;br&gt; Falls du deine E-Mail Adresse nicht selber hinzugefügt hast, kannst du dieses E-Mail ignorieren.
+      ButtonText: Email verifizieren
+    - MessageTextType: VerifyPhone
+      Language: de
+      Title: Zitadel - Telefonnummer verifizieren
+      PreHeader: Telefonnummer verifizieren
+      Subject: Telefonnummer verifizieren
+      Greeting: Hallo {{ '{{' }}.DisplayName {{ '}}' }},
+      Text: Eine Telefonnummer wurde hinzugefügt. Bitte verifiziere diese in dem du folgenden Code eingibst (Code {{ '{{' }}.Code{{ '}}' }},)
+      ButtonText: Telefon verifizieren
+    - MessageTextType: DomainClaimed
+      Language: de
+      Title: Zitadel - Domain wurde beansprucht
+      PreHeader: Email / Username ändern
+      Subject: Domain wurde beansprucht
+      Greeting: Hallo {{ '{{' }}.DisplayName {{ '}}' }},
+      Text: Die Domain {{ '{{' }}.Domain{{ '}}' }}, wurde von einer Organisation beansprucht. Dein derzeitiger User {{ '{{' }}.Username{{ '}}' }}, ist nicht Teil dieser Organisation. Daher musst du beim nächsten Login eine neue Email hinterlegen. Für diesen Login haben wir dir einen temporären Usernamen ({{ '{{' }}.TempUsername{{ '}}' }},) erstellt.
+      ButtonText: Login
+    - MessageTextType: PasswordChange
+      Language: de
+      Title: ZITADEL - Passwort von Benutzer wurde geändert
+      PreHeader: Passwort Änderung
+      Subject: Passwort von Benutzer wurde geändert
+      Greeting: Hallo {{ '{{' }}.DisplayName {{ '}}' }},
+      Text: Das Password vom Benutzer wurde geändert. Wenn diese Änderung von jemand anderem gemacht wurde, empfehlen wir die sofortige Zurücksetzung ihres Passworts.
+      ButtonText: Login
+    - MessageTextType: InitCode
+      Language: en
+      Title: Zitadel - Initialize User
+      PreHeader: Initialize User
+      Subject: Initialize User
+      Greeting: Hello {{ '{{' }}.DisplayName {{ '}}' }},
+      Text: This user was created in Zitadel. Use the username {{ '{{' }}.PreferredLoginName{{ '}}' }}, to login. Please click the button below to finish the initialization process. (Code {{ '{{' }}.Code{{ '}}' }},) If you didn't ask for this mail, please ignore it.
+      ButtonText: Finish initialization
+    - MessageTextType: PasswordReset
+      Language: en
+      Title: Zitadel - Reset password
+      PreHeader: Reset password
+      Subject: Reset password
+      Greeting: Hello {{ '{{' }}.DisplayName {{ '}}' }},
+      Text: We received a password reset request. Please use the button below to reset your password. (Code {{ '{{' }}.Code{{ '}}' }},) If you didn't ask for this mail, please ignore it.
+      ButtonText: Reset password
+    - MessageTextType: VerifyEmail
+      Language: en
+      Title: Zitadel - Verify email
+      PreHeader: Verify email
+      Subject: Verify email
+      Greeting: Hello {{ '{{' }}.DisplayName {{ '}}' }},
+      Text: A new email has been added. Please use the button below to verify your email. (Code {{ '{{' }}.Code{{ '}}' }},) If you din't add a new email, please ignore this email.
+      ButtonText: Verify email
+    - MessageTextType: VerifyPhone
+      Language: en
+      Title: Zitadel - Verify phone
+      PreHeader: Verify phone
+      Subject: Verify phone
+      Greeting: Hello {{ '{{' }}.DisplayName {{ '}}' }},
+      Text: A new phone number has been added. Please use the following code to verify it {{ '{{' }}.Code{{ '}}' }},.
+      ButtonText: Verify phone
+    - MessageTextType: DomainClaimed
+      Language: en
+      Title: Zitadel - Domain has been claimed
+      PreHeader: Change email/username
+      Subject: Domain has been claimed
+      Greeting: Hello {{ '{{' }}.DisplayName {{ '}}' }},
+      Text: The domain {{ '{{' }}.Domain{{ '}}' }}, has been claimed by an organization. Your current user {{ '{{' }}.Username{{ '}}' }}, is not part of this organization. Therefore you'll have to change your email when you login. We have created a temporary username ({{ '{{' }}.TempUsername{{ '}}' }},) for this login.
+      ButtonText: Login
+    - MessageTextType: PasswordChange
+      Language: en
+      Title: ZITADEL - Password of user has changed
+      PreHeader: Change password
+      Subject: Password of user has changed
+      Greeting: Hello {{ '{{' }}.DisplayName {{ '}}' }},
+      Text: The password of your user has changed. If this change was not done by you, please be advised to immediately reset your password.
+      ButtonText: Login
+
+  Features:
+    LoginDefaultOrg: true
+    # TriggerIntrospectionProjections: false
+    # LegacyIntrospection: false
+  Limits:
+    AuditLogRetention:
+    Block:
+  Restrictions:
+    DisallowPublicOrgRegistration: true
+    AllowedLanguages: []
+  Quotas:
+    Items: []
+
+AuditLogRetention: 0s
+
+InternalAuthZ:
+  RolePermissionMappings:
+    - Role: "SYSTEM_OWNER"
+      Permissions:
+        - "system.instance.read"
+        - "system.instance.write"
+        - "system.instance.delete"
+        - "system.domain.read"
+        - "system.domain.write"
+        - "system.domain.delete"
+        - "system.debug.read"
+        - "system.debug.write"
+        - "system.debug.delete"
+        - "system.feature.read"
+        - "system.feature.write"
+        - "system.feature.delete"
+        - "system.limits.write"
+        - "system.limits.delete"
+        - "system.quota.write"
+        - "system.quota.delete"
+        - "system.iam.member.read"
+    - Role: "SYSTEM_OWNER_VIEWER"
+      Permissions:
+        - "system.instance.read"
+        - "system.domain.read"
+        - "system.debug.read"
+        - "system.feature.read"
+        - "system.iam.member.read"
+    - Role: "IAM_OWNER"
+      Permissions:
+        - "iam.read"
+        - "iam.write"
+        - "iam.policy.read"
+        - "iam.policy.write"
+        - "iam.policy.delete"
+        - "iam.member.read"
+        - "iam.member.write"
+        - "iam.member.delete"
+        - "iam.idp.read"
+        - "iam.idp.write"
+        - "iam.idp.delete"
+        - "iam.action.read"
+        - "iam.action.write"
+        - "iam.action.delete"
+        - "iam.flow.read"
+        - "iam.flow.write"
+        - "iam.flow.delete"
+        - "iam.feature.read"
+        - "iam.feature.write"
+        - "iam.feature.delete"
+        - "iam.restrictions.read"
+        - "iam.restrictions.write"
+        - "org.read"
+        - "org.global.read"
+        - "org.create"
+        - "org.write"
+        - "org.delete"
+        - "org.member.read"
+        - "org.member.write"
+        - "org.member.delete"
+        - "org.idp.read"
+        - "org.idp.write"
+        - "org.idp.delete"
+        - "org.action.read"
+        - "org.action.write"
+        - "org.action.delete"
+        - "org.flow.read"
+        - "org.flow.write"
+        - "org.flow.delete"
+        - "org.feature.read"
+        - "org.feature.write"
+        - "org.feature.delete"
+        - "user.read"
+        - "user.global.read"
+        - "user.write"
+        - "user.delete"
+        - "user.grant.read"
+        - "user.grant.write"
+        - "user.grant.delete"
+        - "user.membership.read"
+        - "user.credential.write"
+        - "user.passkey.write"
+        - "user.feature.read"
+        - "user.feature.write"
+        - "user.feature.delete"
+        - "policy.read"
+        - "policy.write"
+        - "policy.delete"
+        - "project.read"
+        - "project.create"
+        - "project.write"
+        - "project.delete"
+        - "project.member.read"
+        - "project.member.write"
+        - "project.member.delete"
+        - "project.role.read"
+        - "project.role.write"
+        - "project.role.delete"
+        - "project.app.read"
+        - "project.app.write"
+        - "project.app.delete"
+        - "project.grant.read"
+        - "project.grant.write"
+        - "project.grant.delete"
+        - "project.grant.member.read"
+        - "project.grant.member.write"
+        - "project.grant.member.delete"
+        - "events.read"
+        - "milestones.read"
+        - "session.delete"
+        - "action.target.write"
+        - "action.target.delete"
+        - "action.execution.write"
+        - "userschema.read"
+        - "userschema.write"
+        - "userschema.delete"
+    - Role: "IAM_OWNER_VIEWER"
+      Permissions:
+        - "iam.read"
+        - "iam.policy.read"
+        - "iam.member.read"
+        - "iam.idp.read"
+        - "iam.action.read"
+        - "iam.flow.read"
+        - "iam.restrictions.read"
+        - "iam.feature.read"
+        - "org.read"
+        - "org.member.read"
+        - "org.idp.read"
+        - "org.action.read"
+        - "org.flow.read"
+        - "org.feature.read"
+        - "user.read"
+        - "user.global.read"
+        - "user.grant.read"
+        - "user.membership.read"
+        - "user.feature.read"
+        - "policy.read"
+        - "project.read"
+        - "project.member.read"
+        - "project.role.read"
+        - "project.app.read"
+        - "project.grant.read"
+        - "project.grant.member.read"
+        - "events.read"
+        - "milestones.read"
+        - "execution.target.read"
+        - "execution.read"
+        - "userschema.read"
+    - Role: "IAM_ORG_MANAGER"
+      Permissions:
+        - "org.read"
+        - "org.global.read"
+        - "org.create"
+        - "org.write"
+        - "org.delete"
+        - "org.member.read"
+        - "org.member.write"
+        - "org.member.delete"
+        - "org.idp.read"
+        - "org.idp.write"
+        - "org.idp.delete"
+        - "org.action.read"
+        - "org.action.write"
+        - "org.action.delete"
+        - "org.flow.read"
+        - "org.flow.write"
+        - "org.flow.delete"
+        - "org.feature.read"
+        - "org.feature.write"
+        - "org.feature.delete"
+        - "user.read"
+        - "user.global.read"
+        - "user.write"
+        - "user.delete"
+        - "user.grant.read"
+        - "user.grant.write"
+        - "user.grant.delete"
+        - "user.membership.read"
+        - "user.credential.write"
+        - "user.passkey.write"
+        - "user.feature.read"
+        - "user.feature.write"
+        - "user.feature.delete"
+        - "policy.read"
+        - "policy.write"
+        - "policy.delete"
+        - "project.read"
+        - "project.create"
+        - "project.write"
+        - "project.delete"
+        - "project.member.read"
+        - "project.member.write"
+        - "project.member.delete"
+        - "project.role.read"
+        - "project.role.write"
+        - "project.role.delete"
+        - "project.app.read"
+        - "project.app.write"
+        - "project.app.delete"
+        - "project.grant.read"
+        - "project.grant.write"
+        - "project.grant.delete"
+        - "project.grant.member.read"
+        - "project.grant.member.write"
+        - "project.grant.member.delete"
+        - "session.delete"
+    - Role: "IAM_USER_MANAGER"
+      Permissions:
+        - "org.read"
+        - "org.global.read"
+        - "org.member.read"
+        - "org.member.delete"
+        - "user.read"
+        - "user.global.read"
+        - "user.write"
+        - "user.delete"
+        - "user.grant.read"
+        - "user.grant.write"
+        - "user.grant.delete"
+        - "user.membership.read"
+        - "user.passkey.write"
+        - "user.feature.read"
+        - "user.feature.write"
+        - "user.feature.delete"
+        - "project.read"
+        - "project.member.read"
+        - "project.role.read"
+        - "project.app.read"
+        - "project.grant.read"
+        - "project.grant.write"
+        - "project.grant.delete"
+        - "project.grant.member.read"
+        - "session.delete"
+    - Role: "IAM_ADMIN_IMPERSONATOR"
+      Permissions:
+        - "admin.impersonation"
+        - "impersonation"
+    - Role: "IAM_END_USER_IMPERSONATOR"
+      Permissions:
+        - "impersonation"
+    - Role: "ORG_OWNER"
+      Permissions:
+        - "org.read"
+        - "org.global.read"
+        - "org.write"
+        - "org.delete"
+        - "org.member.read"
+        - "org.member.write"
+        - "org.member.delete"
+        - "org.idp.read"
+        - "org.idp.write"
+        - "org.idp.delete"
+        - "org.action.read"
+        - "org.action.write"
+        - "org.action.delete"
+        - "org.flow.read"
+        - "org.flow.write"
+        - "org.flow.delete"
+        - "org.feature.read"
+        - "org.feature.write"
+        - "org.feature.delete"
+        - "user.read"
+        - "user.global.read"
+        - "user.write"
+        - "user.delete"
+        - "user.grant.read"
+        - "user.grant.write"
+        - "user.grant.delete"
+        - "user.membership.read"
+        - "user.credential.write"
+        - "user.passkey.write"
+        - "user.feature.read"
+        - "user.feature.write"
+        - "user.feature.delete"
+        - "policy.read"
+        - "policy.write"
+        - "policy.delete"
+        - "project.read"
+        - "project.create"
+        - "project.write"
+        - "project.delete"
+        - "project.member.read"
+        - "project.member.write"
+        - "project.member.delete"
+        - "project.role.read"
+        - "project.role.write"
+        - "project.role.delete"
+        - "project.app.read"
+        - "project.app.write"
+        - "project.grant.read"
+        - "project.grant.write"
+        - "project.grant.delete"
+        - "project.grant.member.read"
+        - "project.grant.member.write"
+        - "project.grant.member.delete"
+        - "session.delete"
+    - Role: "ORG_USER_MANAGER"
+      Permissions:
+        - "org.read"
+        - "user.read"
+        - "user.global.read"
+        - "user.write"
+        - "user.delete"
+        - "user.grant.read"
+        - "user.grant.write"
+        - "user.grant.delete"
+        - "user.membership.read"
+        - "user.feature.read"
+        - "user.feature.write"
+        - "user.feature.delete"
+        - "policy.read"
+        - "project.read"
+        - "project.role.read"
+        - "session.delete"
+    - Role: "ORG_OWNER_VIEWER"
+      Permissions:
+        - "org.read"
+        - "org.member.read"
+        - "org.idp.read"
+        - "org.action.read"
+        - "org.flow.read"
+        - "org.feature.read"
+        - "user.read"
+        - "user.global.read"
+        - "user.grant.read"
+        - "user.membership.read"
+        - "user.feature.read"
+        - "policy.read"
+        - "project.read"
+        - "project.member.read"
+        - "project.role.read"
+        - "project.app.read"
+        - "project.grant.read"
+        - "project.grant.member.read"
+        - "project.grant.user.grant.read"
+    - Role: "ORG_SETTINGS_MANAGER"
+      Permissions:
+        - "org.read"
+        - "org.write"
+        - "org.member.read"
+        - "org.idp.read"
+        - "org.idp.write"
+        - "org.idp.delete"
+        - "org.feature.read"
+        - "org.feature.write"
+        - "org.feature.delete"
+        - "policy.read"
+        - "policy.write"
+        - "policy.delete"
+    - Role: "ORG_USER_PERMISSION_EDITOR"
+      Permissions:
+        - "org.read"
+        - "org.member.read"
+        - "user.read"
+        - "user.global.read"
+        - "user.grant.read"
+        - "user.grant.write"
+        - "user.grant.delete"
+        - "policy.read"
+        - "project.read"
+        - "project.member.read"
+        - "project.role.read"
+        - "project.app.read"
+        - "project.grant.read"
+        - "project.grant.member.read"
+    - Role: "ORG_PROJECT_PERMISSION_EDITOR"
+      Permissions:
+        - "org.read"
+        - "org.member.read"
+        - "user.read"
+        - "user.global.read"
+        - "user.grant.read"
+        - "user.grant.write"
+        - "user.grant.delete"
+        - "policy.read"
+        - "project.read"
+        - "project.member.read"
+        - "project.role.read"
+        - "project.app.read"
+        - "project.grant.read"
+        - "project.grant.write"
+        - "project.grant.delete"
+        - "project.grant.member.read"
+    - Role: "ORG_PROJECT_CREATOR"
+      Permissions:
+        - "user.global.read"
+        - "policy.read"
+        - "project.read:self"
+        - "project.create"
+    - Role: "ORG_ADMIN_IMPERSONATOR"
+      Permissions:
+        - "admin.impersonation"
+        - "impersonation"
+    - Role: "ORG_END_USER_IMPERSONATOR"
+      Permissions:
+        - "impersonation"
+    - Role: "PROJECT_OWNER"
+      Permissions:
+        - "org.global.read"
+        - "policy.read"
+        - "project.read"
+        - "project.write"
+        - "project.delete"
+        - "project.member.read"
+        - "project.member.write"
+        - "project.member.delete"
+        - "project.role.read"
+        - "project.role.write"
+        - "project.role.delete"
+        - "project.app.read"
+        - "project.app.write"
+        - "project.app.delete"
+        - "project.grant.read"
+        - "project.grant.write"
+        - "project.grant.delete"
+        - "project.grant.member.read"
+        - "project.grant.member.write"
+        - "project.grant.member.delete"
+        - "user.read"
+        - "user.global.read"
+        - "user.grant.read"
+        - "user.grant.write"
+        - "user.grant.delete"
+        - "user.membership.read"
+    - Role: "PROJECT_OWNER_VIEWER"
+      Permissions:
+        - "policy.read"
+        - "project.read"
+        - "project.member.read"
+        - "project.role.read"
+        - "project.app.read"
+        - "project.grant.read"
+        - "project.grant.member.read"
+        - "user.read"
+        - "user.global.read"
+        - "user.grant.read"
+        - "user.membership.read"
+    - Role: "SELF_MANAGEMENT_GLOBAL"
+      Permissions:
+        - "org.create"
+        - "policy.read"
+        - "user.self.delete"
+    - Role: "ORG_USER_SELF_MANAGER"
+      Permissions:
+        - "policy.read"
+        - "user.self.delete"
+    - Role: "PROJECT_OWNER_GLOBAL"
+      Permissions:
+        - "org.global.read"
+        - "policy.read"
+        - "project.read"
+        - "project.write"
+        - "project.delete"
+        - "project.member.read"
+        - "project.member.write"
+        - "project.member.delete"
+        - "project.role.read"
+        - "project.role.write"
+        - "project.role.delete"
+        - "project.app.read"
+        - "project.app.write"
+        - "project.app.delete"
+        - "user.global.read"
+        - "user.grant.read"
+        - "user.grant.write"
+        - "user.grant.delete"
+        - "user.membership.read"
+    - Role: "PROJECT_OWNER_VIEWER_GLOBAL"
+      Permissions:
+        - "policy.read"
+        - "project.read"
+        - "project.member.read"
+        - "project.role.read"
+        - "project.app.read"
+        - "project.grant.read"
+        - "project.grant.member.read"
+        - "user.global.read"
+        - "user.grant.read"
+        - "user.membership.read"
+    - Role: "PROJECT_GRANT_OWNER"
+      Permissions:
+        - "policy.read"
+        - "org.global.read"
+        - "project.read"
+        - "project.grant.read"
+        - "project.grant.member.read"
+        - "project.grant.member.write"
+        - "project.grant.member.delete"
+        - "user.read"
+        - "user.global.read"
+        - "user.grant.read"
+        - "user.grant.write"
+        - "user.grant.delete"
+        - "user.membership.read"
+    - Role: "PROJECT_GRANT_OWNER_VIEWER"
+      Permissions:
+        - "policy.read"
+        - "project.read"
+        - "project.grant.read"
+        - "project.grant.member.read"
+        - "user.read"
+        - "user.global.read"
+        - "user.grant.read"
+        - "user.membership.read"
+
+InitProjections:
+  Enabled: true
+  RetryFailedAfter: 100ms
+  MaxFailureCount: 2
+  BulkLimit: 1000

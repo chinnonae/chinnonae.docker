@@ -5,6 +5,32 @@
     state: directory
     mode: '0755'
 
+- name: Ensure Zitadel config directory exists
+  ansible.builtin.file:
+    path: "{{ compose_zitadel_config_dir }}"
+    state: directory
+    mode: '0750'
+
+- name: Copy Zitadel db config
+  ansible.builtin.template:
+    src: "zitadel-db-config.yaml.j2"
+    dest: "{{ compose_zitadel_config_dir }}/db.yaml"
+    mode: '0640'
+
+- name: Copy Zitadel config
+  ansible.builtin.template:
+    src: "zitadel-config.yaml.j2"
+    dest: "{{ compose_zitadel_config_dir }}/config.yaml"
+    mode: '0640'
+    force: "{{ compose_zitadel_overwrite_config }}"
+
+- name: Copy Zitadel first instance config
+  ansible.builtin.template:
+    src: "zitadel-first-instance.yaml.j2"
+    dest: "{{ compose_zitadel_config_dir }}/first-instance.yaml"
+    mode: '0640'
+    force: false
+
 - name: Copy docker compose
   ansible.builtin.template:
     src: "docker-compose.yaml.j2"

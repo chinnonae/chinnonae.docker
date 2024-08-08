@@ -3,7 +3,7 @@
 services:
   zitadel:
     image: "{{ compose_zitadel_image_url }}:{{ compose_zitadel_image_tag }}"
-    command: start-from-init --masterkeyFromEnv
+    command: start-from-setup --masterkeyFromEnv --config /configs/db.yaml --config /configs/config.yaml --steps /configs/first-instance.yaml --init-projections=true
     environment:
       # https://zitadel.com/docs/self-hosting/manage/configure#runtime-configuration-file
       ZITADEL_MASTERKEY: "{{ compose_zitadel_masterkey }}"
@@ -12,24 +12,9 @@ services:
       ZITADEL_EXTERNALSECURE: true
       ZITADEL_TLS_ENABLED: false
       ZITADEL_EXTERNALDOMAIN: "{{ compose_zitadel_host }}"
-      # DB CONFIG
-      ZITADEL_DATABASE_POSTGRES_HOST: "{{ compose_zitadel_db_host }}"
-      ZITADEL_DATABASE_POSTGRES_PORT: "{{ compose_zitadel_db_port }}"
-      ZITADEL_DATABASE_POSTGRES_DATABASE: "{{ compose_zitadel_db_dbname }}"
-      ZITADEL_DATABASE_POSTGRES_USER_USERNAME: "{{ compose_zitadel_db_username }}"
-      ZITADEL_DATABASE_POSTGRES_USER_PASSWORD: "{{ compose_zitadel_db_password }}"
-      ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE: "{{ compose_zitadel_db_ssl }}"
-      ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME: "{{ compose_zitadel_db_username }}"
-      ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD: "{{ compose_zitadel_db_password }}"
-      ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE: "{{ compose_zitadel_db_ssl }}"
-      # FIRST INSTANCE
-      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME: zitadel-admin
-      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS: zitadel-admin@localhost
-      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD: Password1!
-      ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORDCHANGEREQUIRED: false
     depends_on:
       postgres:
-        condition: service_healthy
+        condition: service_started
     networks:
       - default
       - traefik
@@ -41,21 +26,40 @@ services:
       traefik.http.routers.zitadel.tls.certresolver: "http01"
       traefik.http.services.zitadel.loadbalancer.server.port: "8080"
       traefik.docker.network: "traefik"
+    configs:
+      - source: zitadel-db-config
+        target: /configs/db.yaml
+        mode: 0444
+      - source: zitadel-config
+        target: /configs/config.yaml
+        mode: 0444
+      - source: zitadel-first-instance
+        target: /configs/first-instance.yaml
+        mode: 0444
 
   postgres:
-    image: postgres:16-alpine
+    image: bitnami/postgresql:16-debian-12
     environment:
-      POSTGRES_USER: "{{ compose_zitadel_db_username }}"
-      POSTGRES_PASSWORD: "{{ compose_zitadel_db_password }}"
-      POSTGRES_DB: "{{ compose_zitadel_db_dbname }}"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready", "-d", "{{ compose_zitadel_db_dbname }}"]
-      interval: '10s'
-      timeout: '30s'
-      retries: 5
-      start_period: '20s'
+      POSTGRESQL_PORT_NUMBER: "{{ compose_zitadel_db_port }}"
+      POSTGRESQL_PASSWORD: "{{ compose_zitadel_db_password }}"
+      POSTGRESQL_USERNAME: "{{ compose_zitadel_db_username }}"
+      POSTGRESQL_DATABASE: "{{ compose_zitadel_db_dbname }}"
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready", "-U", "{{ compose_zitadel_db_username }}"]
+    #   interval: '10s'
+    #   timeout: '30s'
+    #   retries: 5
+    #   start_period: '20s'
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/bitnami/postgresql
+
+configs:
+  zitadel-db-config:
+    file: ./zitadel-configs/db.yaml
+  zitadel-config:
+    file: ./zitadel-configs/config.yaml
+  zitadel-first-instance:
+    file: ./zitadel-configs/first-instance.yaml
 
 volumes:
   postgres-data: {}

@@ -1,0 +1,22 @@
+{{ ansible_managed | comment }}
+---
+Database:
+  EventPushConnRatio: 0.2
+  ProjectionSpoolerConnRatio: 0.135
+  postgres:
+    Host: "{{ compose_zitadel_db_host }}"
+    Port: "{{ compose_zitadel_db_port }}"
+    Database: "{{ compose_zitadel_db_dbname }}"
+    # MaxOpenConns:
+    # MaxIdleConns:
+    # MaxConnLifetime:
+    # MaxConnIdleTime:
+    # Options:
+    User:
+      Username: "{{ compose_zitadel_db_username }}"
+      Password: "{{ compose_zitadel_db_password }}"
+      SSL:
+        Mode: disable
+        # RootCert:
+        # Cert:
+        # Key:

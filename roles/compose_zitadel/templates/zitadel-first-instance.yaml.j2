@@ -1,0 +1,43 @@
+{{ ansible_managed | comment }}
+---
+FirstInstance:
+  Skip: false
+  PatPath:
+  InstanceName: ZITADEL
+  DefaultLanguage: en
+  Org:
+    Name: ZITADEL
+    Human:
+      UserName: "{{ compose_zitadel_admin_username }}"
+      FirstName: ZITADEL
+      LastName: Admin
+      NickName:
+      DisplayName:
+      Email:
+        Address: "zitadel@{{ compose_zitadel_host }}"
+        Verified: true
+      PreferredLanguage: en
+      Gender:
+      Phone:
+        Number:
+        Verified:
+      Password: "{{ compose_zitadel_admin_password }}"
+      PasswordChangeRequired: true
+    Machine:
+      Machine:
+        Username:
+        Name:
+      MachineKey:
+        ExpirationDate:
+        Type:
+      Pat:
+        ExpirationDate:
+
+CorrectCreationDate:
+  FailAfter: 5m
+
+AddEventCreatedAt:
+  BulkAmount: 100
+
+FillFields:
+  BatchSize: 1000

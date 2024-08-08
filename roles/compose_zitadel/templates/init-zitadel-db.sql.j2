@@ -1,0 +1,5 @@
+CREATE USER {{ compose_zitadel_db_username }} WITH
+  PASSWORD '{{ compose_zitadel_db_password }}';
+
+CREATE DATABASE {{ compose_zitadel_db_dbname }} WITH
+  OWNER {{ compose_zitadel_db_username }};
