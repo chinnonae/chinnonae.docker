@@ -16,6 +16,7 @@
     src: "zitadel-db-config.yaml.j2"
     dest: "{{ compose_zitadel_config_dir }}/db.yaml"
     mode: '0640'
+    owner: 1000
 
 - name: Copy Zitadel config
   ansible.builtin.template:
@@ -23,6 +24,7 @@
     dest: "{{ compose_zitadel_config_dir }}/config.yaml"
     mode: '0640'
     force: "{{ compose_zitadel_overwrite_config }}"
+    owner: 1000
 
 - name: Copy Zitadel first instance config
   ansible.builtin.template:
@@ -30,6 +32,7 @@
     dest: "{{ compose_zitadel_config_dir }}/first-instance.yaml"
     mode: '0640'
     force: false
+    owner: 1000
 
 - name: Copy docker compose
   ansible.builtin.template:
