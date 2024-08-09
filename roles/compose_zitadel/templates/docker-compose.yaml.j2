@@ -3,7 +3,7 @@
 services:
   zitadel:
     image: "{{ compose_zitadel_image_url }}:{{ compose_zitadel_image_tag }}"
-    command: start-from-setup --masterkeyFromEnv --config /configs/db.yaml --config /configs/config.yaml --steps /configs/first-instance.yaml --init-projections=true
+    command: start-from-init --masterkeyFromEnv --config /configs/db.yaml --config /configs/config.yaml --steps /configs/first-instance.yaml --init-projections=true
     environment:
       # https://zitadel.com/docs/self-hosting/manage/configure#runtime-configuration-file
       ZITADEL_MASTERKEY: "{{ compose_zitadel_masterkey }}"
@@ -26,24 +26,14 @@ services:
       traefik.http.routers.zitadel.tls.certresolver: "http01"
       traefik.http.services.zitadel.loadbalancer.server.port: "8080"
       traefik.docker.network: "traefik"
-    configs:
-      - source: zitadel-db-config
-        target: /configs/db.yaml
-        mode: 0444
-      - source: zitadel-config
-        target: /configs/config.yaml
-        mode: 0444
-      - source: zitadel-first-instance
-        target: /configs/first-instance.yaml
-        mode: 0444
+    volumes:
+      - {{ compose_zitadel_config_dir }}:/configs:ro
 
   postgres:
     image: bitnami/postgresql:16-debian-12
     environment:
       POSTGRESQL_PORT_NUMBER: "{{ compose_zitadel_db_port }}"
-      POSTGRESQL_PASSWORD: "{{ compose_zitadel_db_password }}"
-      POSTGRESQL_USERNAME: "{{ compose_zitadel_db_username }}"
-      POSTGRESQL_DATABASE: "{{ compose_zitadel_db_dbname }}"
+      POSTGRESQL_PASSWORD: "{{ compose_zitadel_db_password_admin }}"
     # healthcheck:
     #   test: ["CMD-SHELL", "pg_isready", "-U", "{{ compose_zitadel_db_username }}"]
     #   interval: '10s'
@@ -52,14 +42,6 @@ services:
     #   start_period: '20s'
     volumes:
       - postgres-data:/bitnami/postgresql
-
-configs:
-  zitadel-db-config:
-    file: ./zitadel-configs/db.yaml
-  zitadel-config:
-    file: ./zitadel-configs/config.yaml
-  zitadel-first-instance:
-    file: ./zitadel-configs/first-instance.yaml
 
 volumes:
   postgres-data: {}

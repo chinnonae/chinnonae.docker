@@ -10,6 +10,7 @@
     path: "{{ compose_zitadel_config_dir }}"
     state: directory
     mode: '0750'
+    owner: 1000
 
 - name: Copy Zitadel db config
   ansible.builtin.template:
@@ -31,7 +32,7 @@
     src: "zitadel-first-instance.yaml.j2"
     dest: "{{ compose_zitadel_config_dir }}/first-instance.yaml"
     mode: '0640'
-    force: false
+    force: "{{ compose_zitadel_overwrite_config }}"
     owner: 1000
 
 - name: Copy docker compose
