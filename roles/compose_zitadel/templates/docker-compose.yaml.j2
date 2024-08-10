@@ -6,7 +6,7 @@ services:
     command: start-from-init --masterkeyFromEnv --config /configs/db.yaml --config /configs/config.yaml --steps /configs/first-instance.yaml --init-projections=true
     environment:
       # https://zitadel.com/docs/self-hosting/manage/configure#runtime-configuration-file
-      ZITADEL_MASTERKEY: "{{ compose_zitadel_masterkey }}"
+      ZITADEL_MASTERKEY: "{{ compose_zitadel_masterkey | replace('$', '$$') }}"
       # WEB CONFIG
       ZITADEL_EXTERNALPORT: "443"
       ZITADEL_EXTERNALSECURE: true
