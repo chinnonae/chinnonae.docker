@@ -34,12 +34,12 @@ services:
     environment:
       POSTGRESQL_PORT_NUMBER: "{{ compose_zitadel_db_port }}"
       POSTGRESQL_PASSWORD: "{{ compose_zitadel_db_password_admin }}"
-    # healthcheck:
-    #   test: ["CMD-SHELL", "pg_isready", "-U", "{{ compose_zitadel_db_username }}"]
-    #   interval: '10s'
-    #   timeout: '30s'
-    #   retries: 5
-    #   start_period: '20s'
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "postgres"]
+      interval: '10s'
+      timeout: '30s'
+      retries: 5
+      start_period: '10s'
     volumes:
       - postgres-data:/bitnami/postgresql
 
