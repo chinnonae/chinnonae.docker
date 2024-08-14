@@ -3,5 +3,11 @@
 global:
   {}
 
+route:
+  receiver: blackhole
+
+receivers:
+  - name: blackhole
+
 templates:
   - /etc/alertmanager/templates/*.tmpl

@@ -6,6 +6,13 @@ global:
 
   evaluation_interval: 1m
 
+alerting:
+  alertmanager:
+    - path_prefix: "{{ compose_base_alertmanager_web_path_prefix }}"
+      static_configs:
+        - targets:
+            - alertmanager:9093
+
 rule_files:
   - /etc/prometheus/rules/*.yaml
 

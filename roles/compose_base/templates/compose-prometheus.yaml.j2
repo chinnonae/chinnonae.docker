@@ -35,32 +35,32 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-  # alertmanager:
-  #   image: "{{ compose_base_alertmanager_image_url }}:{{ compose_base_alertmanager_image_tag }}"
-  #   command:
-  #     - --web.external-url=https://{{ compose_base_alertmanager_host }}{{ compose_base_alertmanager_web_path_prefix }}
-  #     - --config.file=/etc/alertmanager/alertmanager.yaml
-  #     - --data.retention=7d
-  #   networks:
-  #     - traefik
-  #     - prometheus
-  #   labels:
-  #     traefik.enable: "true"
-  #     traefik.http.routers.alertmanager.rule: "Host(`{{ compose_base_alertmanager_host }}`) && PathPrefix(`{{ compose_base_alertmanager_web_path_prefix }}`)"
-  #     traefik.http.routers.alertmanager.entrypoints: "https"
-  #     traefik.http.routers.alertmanager.tls: "true"
-  #     traefik.http.routers.alertmanager.tls.certresolver: "http01"
-  #     traefik.http.routers.alertmanager.middlewares: alertmanager-auth
-  #     traefik.http.services.alertmanager.loadbalancer.server.port: "9090"
-  #     traefik.http.middlewares.alertmanager-auth.basicauth.users: "{{ compose_base_alertmanager_users | replace('$', '$$') }}"
-  #     traefik.docker.network: "traefik"
-  #   volumes:
-  #     - alertmanager:/alertmanager
-  #     - ./alertmanager:/etc/alertmanager:ro
+  alertmanager:
+    image: "{{ compose_base_alertmanager_image_url }}:{{ compose_base_alertmanager_image_tag }}"
+    command:
+      - --web.external-url=https://{{ compose_base_alertmanager_host }}{{ compose_base_alertmanager_web_path_prefix }}
+      - --config.file=/etc/alertmanager/alertmanager.yaml
+      - --data.retention=7d
+    networks:
+      - traefik
+      - prometheus
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.alertmanager.rule: "Host(`{{ compose_base_alertmanager_host }}`) && PathPrefix(`{{ compose_base_alertmanager_web_path_prefix }}`)"
+      traefik.http.routers.alertmanager.entrypoints: "https"
+      traefik.http.routers.alertmanager.tls: "true"
+      traefik.http.routers.alertmanager.tls.certresolver: "http01"
+      traefik.http.routers.alertmanager.middlewares: alertmanager-auth
+      traefik.http.services.alertmanager.loadbalancer.server.port: "9093"
+      traefik.http.middlewares.alertmanager-auth.basicauth.users: "{{ compose_base_alertmanager_users | replace('$', '$$') }}"
+      traefik.docker.network: "traefik"
+    volumes:
+      - alertmanager:/alertmanager
+      - ./alertmanager:/etc/alertmanager:ro
 
 volumes:
   prometheus: {}
-  # alertmanager: {}
+  alertmanager: {}
 
 networks:
   prometheus:
