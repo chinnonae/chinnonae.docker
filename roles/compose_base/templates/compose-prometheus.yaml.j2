@@ -17,15 +17,7 @@ services:
       - traefik
       - prometheus
     labels:
-      traefik.enable: "true"
-      traefik.http.routers.prometheus.rule: "Host(`{{ compose_base_prometheus_host }}`) && PathPrefix(`{{ compose_base_prometheus_web_path_prefix }}`)"
-      traefik.http.routers.prometheus.entrypoints: "https"
-      traefik.http.routers.prometheus.tls: "true"
-      traefik.http.routers.prometheus.tls.certresolver: "http01"
-      traefik.http.routers.prometheus.middlewares: prometheus-auth
-      traefik.http.services.prometheus.loadbalancer.server.port: "9090"
-      traefik.http.middlewares.prometheus-auth.basicauth.users: "{{ compose_base_prometheus_users | replace('$', '$$') }}"
-      traefik.docker.network: "traefik"
+      {{- compose_base_prometheus_labels | to_nice_yaml(indent=6) }}
     volumes:
       - prometheus:/prometheus
       - /var/run/docker.sock:/var/run/docker.sock
@@ -33,7 +25,7 @@ services:
       - ./prometheus/scrapes:/etc/prometheus/scrapes:ro
       - ./prometheus/rules:/etc/prometheus/rules:ro
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "{{ compose_base_prometheus_host_name }}:host-gateway"
 
   alertmanager:
     image: "{{ compose_base_alertmanager_image_url }}:{{ compose_base_alertmanager_image_tag }}"
@@ -45,15 +37,7 @@ services:
       - traefik
       - prometheus
     labels:
-      traefik.enable: "true"
-      traefik.http.routers.alertmanager.rule: "Host(`{{ compose_base_alertmanager_host }}`) && PathPrefix(`{{ compose_base_alertmanager_web_path_prefix }}`)"
-      traefik.http.routers.alertmanager.entrypoints: "https"
-      traefik.http.routers.alertmanager.tls: "true"
-      traefik.http.routers.alertmanager.tls.certresolver: "http01"
-      traefik.http.routers.alertmanager.middlewares: alertmanager-auth
-      traefik.http.services.alertmanager.loadbalancer.server.port: "9093"
-      traefik.http.middlewares.alertmanager-auth.basicauth.users: "{{ compose_base_alertmanager_users | replace('$', '$$') }}"
-      traefik.docker.network: "traefik"
+      {{- compose_base_alertmanager_labels | to_nice_yaml(indent=6) }}
     volumes:
       - alertmanager:/alertmanager
       - ./alertmanager:/etc/alertmanager:ro
