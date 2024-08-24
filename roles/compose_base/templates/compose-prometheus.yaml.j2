@@ -1,3 +1,4 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
 {{ ansible_managed | comment }}
 ---
 services:
@@ -17,7 +18,7 @@ services:
       - traefik
       - prometheus
     labels:
-      {{ compose_base_prometheus_labels | to_nice_yaml(indent=6) }}
+      {{ compose_base_prometheus_labels | to_nice_yaml(indent=2) | indent(6, false) }}
     volumes:
       - prometheus:/prometheus
       - /var/run/docker.sock:/var/run/docker.sock
@@ -37,7 +38,7 @@ services:
       - traefik
       - prometheus
     labels:
-      {{ compose_base_alertmanager_labels | to_nice_yaml(indent=6) }}
+      {{ compose_base_alertmanager_labels | to_nice_yaml(indent=2) | indent(6,false) }}
     volumes:
       - alertmanager:/alertmanager
       - ./alertmanager:/etc/alertmanager:ro
