@@ -9,6 +9,7 @@ compose_base_compose_files:
 compose_base_traefik_config_dir: "{{ compose_base_project_dir }}/traefik"
 compose_base_traefik_image_url: traefik
 compose_base_traefik_image_tag: v3.0
+compose_base_traefik_cloudflare_token: ""
 
 compose_base_prometheus_config_dir: "{{ compose_base_project_dir }}/prometheus"
 compose_base_prometheus_image_url: "prom/prometheus"

@@ -56,6 +56,10 @@ certificatesResolvers:
       httpChallenge:
         entryPoint: http
       storage: /letsencrypt/acme.json
+  dns01:
+    acme:
+      dnsChallenge:
+        provider: cloudflare
 
 metrics:
   prometheus:

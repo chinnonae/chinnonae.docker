@@ -3,10 +3,11 @@
 services:
   traefik: 
     image: "{{ compose_base_traefik_image_url }}:{{ compose_base_traefik_image_tag }}"
-    command:
     ports:
       - 80:80
       - 443:443
+    environment:
+      CF_DNS_API_TOKEN: "{{ compose_base_traefik_cloudflare_token }}"
     networks:
       - traefik
       - prometheus
