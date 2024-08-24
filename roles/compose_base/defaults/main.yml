@@ -10,6 +10,7 @@ compose_base_traefik_config_dir: "{{ compose_base_project_dir }}/traefik"
 compose_base_traefik_image_url: traefik
 compose_base_traefik_image_tag: v3.0
 compose_base_traefik_cloudflare_token: ""
+compose_base_traefik_certresolver: "http01"
 
 compose_base_prometheus_config_dir: "{{ compose_base_project_dir }}/prometheus"
 compose_base_prometheus_image_url: "prom/prometheus"
@@ -22,7 +23,7 @@ compose_base_prometheus_labels:
   traefik.http.routers.prometheus.rule: "Host(`{{ compose_base_prometheus_host }}`) && PathPrefix(`{{ compose_base_prometheus_web_path_prefix }}`)"
   traefik.http.routers.prometheus.entrypoints: "https"
   traefik.http.routers.prometheus.tls: "true"
-  traefik.http.routers.prometheus.tls.certresolver: "http01"
+  traefik.http.routers.prometheus.tls.certresolver: "{{ compose_base_traefik_certresolver }}"
   traefik.http.routers.prometheus.middlewares: prometheus-auth
   traefik.http.services.prometheus.loadbalancer.server.port: "9090"
   traefik.http.middlewares.prometheus-auth.basicauth.users: "{{ compose_base_prometheus_users | replace('$', '$$') }}"
@@ -40,7 +41,7 @@ compose_base_alertmanager_labels:
   traefik.http.routers.alertmanager.rule: "Host(`{{ compose_base_alertmanager_host }}`) && PathPrefix(`{{ compose_base_alertmanager_web_path_prefix }}`)"
   traefik.http.routers.alertmanager.entrypoints: "https"
   traefik.http.routers.alertmanager.tls: "true"
-  traefik.http.routers.alertmanager.tls.certresolver: "http01"
+  traefik.http.routers.alertmanager.tls.certresolver: "{{ compose_base_traefik_certresolver }}"
   traefik.http.routers.alertmanager.middlewares: alertmanager-auth
   traefik.http.services.alertmanager.loadbalancer.server.port: "9093"
   traefik.http.middlewares.alertmanager-auth.basicauth.users: "{{ compose_base_alertmanager_users | replace('$', '$$') }}"
