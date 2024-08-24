@@ -17,7 +17,7 @@ services:
       - traefik
       - prometheus
     labels:
-      {{- compose_base_prometheus_labels | to_nice_yaml(indent=6) }}
+      {{ compose_base_prometheus_labels | to_nice_yaml(indent=6) }}
     volumes:
       - prometheus:/prometheus
       - /var/run/docker.sock:/var/run/docker.sock
@@ -37,7 +37,7 @@ services:
       - traefik
       - prometheus
     labels:
-      {{- compose_base_alertmanager_labels | to_nice_yaml(indent=6) }}
+      {{ compose_base_alertmanager_labels | to_nice_yaml(indent=6) }}
     volumes:
       - alertmanager:/alertmanager
       - ./alertmanager:/etc/alertmanager:ro
