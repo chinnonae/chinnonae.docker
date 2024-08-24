@@ -7,7 +7,7 @@ global:
   evaluation_interval: 1m
 
 alerting:
-  alertmanager:
+  alertmanagers:
     - path_prefix: "{{ compose_base_alertmanager_web_path_prefix }}"
       static_configs:
         - targets:
