@@ -29,3 +29,7 @@ scrape_configs:
     static_configs:
       - targets:
           - {{ compose_base_prometheus_host_name }}:9100
+  - job_name: cadvisor
+    static_configs:
+      - targets:
+          - cadvisor:8080

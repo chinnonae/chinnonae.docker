@@ -12,8 +12,6 @@ services:
       - /dev/kmsg
     networks:
       - prometheus
-    labels:
-      prometheus_scrape: "true"
 
   node_exporter:
     image: "{{ compose_base_node_exporter_image_url }}:{{ compose_base_node_exporter_image_tag }}"
