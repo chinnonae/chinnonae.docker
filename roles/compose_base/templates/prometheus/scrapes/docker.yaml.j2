@@ -33,6 +33,10 @@ scrape_configs:
     static_configs:
       - targets:
           - cadvisor:8080
+    metric_relabel_configs:
+      - source_labels: [name]
+        regex: "(.+)"
+        action: keep
   - job_name: traefik
     static_configs:
       - targets:
