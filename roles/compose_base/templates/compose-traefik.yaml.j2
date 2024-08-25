@@ -15,9 +15,6 @@ services:
       - letsencrypt:/letsencrypt
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      prometheus_scrape: "true"
-      prometheus_port: "8082"
 
 volumes:
   letsencrypt: {}
